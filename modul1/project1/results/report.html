@@ -1,0 +1,1174 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Проект 1 — А, Б, В</title><style>body{margin:0;background:#edf2f7;color:#18283b;font:16px/1.6 system-ui,Arial,sans-serif}main{max-width:1180px;margin:32px auto;padding:36px;background:white;border-radius:12px}h1{font-size:30px;line-height:1.2}h2{margin-top:40px;border-bottom:2px solid #dce5ee;padding-bottom:8px}h3{margin-top:28px}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:14px;margin:16px 0}th,td{border:1px solid #dce5ee;padding:8px 10px;text-align:right;white-space:nowrap}th{background:#eaf1f8}th:first-child,td:first-child{text-align:left}tbody tr:nth-child(even){background:#f7fafc}figure{margin:24px 0;overflow:auto}figure svg{max-width:100%;height:auto}figcaption{font-size:13px;color:#52677b}p{max-width:1050px}.actions{margin:0 0 24px}button{padding:8px 18px;border:0;border-radius:6px;background:#1d4ed8;color:white;cursor:pointer}@media print{body{background:white}main{margin:0;padding:0}h2{break-after:avoid}tr,figure{break-inside:avoid}table{font-size:10px}th,td{padding:4px}.actions{display:none}}</style><main><div class="actions"><button onclick="window.print()">Печать / сохранить PDF</button></div><h1>Проект 1. Планировщик учебного сервера — блоки А, Б и В</h1>
+<p>Расчёты выполнены на исходных set1.txt, jobs.txt, mixed.txt и starve.txt. Программа моделирует один процессор; все времена — условные целые единицы. Стоимость переключения равна нулю. Исходные данные не изменяются.</p>
+<h2>Модель, формулы и правила</h2>
+<p>arrival — время поступления; burst — требуемое время CPU; start — первое выполнение; completion — завершение. Оборот T = completion − arrival. Ожидание W = T − burst. Отклик R = start − arrival. Ожидание включает все паузы после вытеснения. Средние берутся по всем процессам, без округления промежуточных значений.</p>
+<p>Меньшее число означает более высокий приоритет. При равенстве ключей выбирается более раннее поступление, затем порядок строк в файле. При равенстве оставшегося времени или приоритета работающий процесс не вытесняется. SJF невытесняющий; SRTF и Priority вытесняющие. В RR новые поступления в момент окончания кванта помещаются в очередь перед возвращаемым процессом; ожидающие сохраняют FIFO-порядок.</p>
+<p>Переключение — непосредственный переход от одного PID к другому. Первый запуск, переходы через простой и повторная выдача CPU тому же PID не считаются переключениями. Число выдач CPU (dispatches) отдельно записано в rr_quantums.csv. Правила сверены с ПР-5 в указанном пользователем репозитории: равенство ключей, граница кванта RR, накопление ожидания для старения и подсчёт переключений совпадают. Опубликованные результаты репозитория проверены отдельно от отсутствующего оригинала задания преподавателя.</p>
+<h2>А. Базовый блок</h2>
+<h3>А1. FCFS для jobs.txt: диаграмма и ручной расчёт</h3>
+<figure><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="189" viewBox="0 0 1120 189" role="img" aria-label="jobs.txt — FCFS">
+<rect width="100%" height="100%" fill="#fff"/>
+<g font-family="Arial,sans-serif" font-size="13" fill="#18283b">
+<text x="24" y="28" font-size="19" font-weight="bold">jobs.txt — FCFS</text>
+<rect x="40" y="52" width="182" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [0, 7)</title></rect>
+<text x="131.0" y="73" text-anchor="middle">P1</text>
+<rect x="222" y="52" width="104" height="32" fill="hsl(218, 58%, 76%)" stroke="#fff"><title>P2: [7, 11)</title></rect>
+<text x="274.0" y="73" text-anchor="middle">P2</text>
+<rect x="326" y="52" width="26" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [11, 12)</title></rect>
+<rect x="352" y="52" width="156" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [12, 18)</title></rect>
+<text x="430.0" y="73" text-anchor="middle">P4</text>
+<rect x="508" y="52" width="78" height="32" fill="hsl(142, 58%, 76%)" stroke="#fff"><title>P5: [18, 21)</title></rect>
+<text x="547.0" y="73" text-anchor="middle">P5</text>
+<rect x="586" y="52" width="52" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P6: [21, 23)</title></rect>
+<text x="612.0" y="73" text-anchor="middle">P6</text>
+<path d="M40,84v6" stroke="#64748b"/><text x="40" y="108" text-anchor="middle">0</text>
+<path d="M170,84v6" stroke="#64748b"/><text x="170" y="108" text-anchor="middle">5</text>
+<path d="M222,84v6" stroke="#64748b"/><text x="222" y="108" text-anchor="middle">7</text>
+<path d="M300,84v6" stroke="#64748b"/><text x="300" y="108" text-anchor="middle">10</text>
+<path d="M326,84v6" stroke="#64748b"/><text x="326" y="108" text-anchor="middle">11</text>
+<path d="M352,84v6" stroke="#64748b"/><text x="352" y="108" text-anchor="middle">12</text>
+<path d="M430,84v6" stroke="#64748b"/><text x="430" y="108" text-anchor="middle">15</text>
+<path d="M508,84v6" stroke="#64748b"/><text x="508" y="108" text-anchor="middle">18</text>
+<path d="M560,84v6" stroke="#64748b"/><text x="560" y="108" text-anchor="middle">20</text>
+<path d="M586,84v6" stroke="#64748b"/><text x="586" y="108" text-anchor="middle">21</text>
+<path d="M638,84v6" stroke="#64748b"/><text x="638" y="108" text-anchor="middle">23</text>
+<rect x="34" y="139" width="18" height="16" fill="hsl(9, 58%, 76%)"/><text x="58" y="152">P1</text>
+<rect x="153" y="139" width="18" height="16" fill="hsl(218, 58%, 76%)"/><text x="177" y="152">P2</text>
+<rect x="272" y="139" width="18" height="16" fill="hsl(123, 58%, 76%)"/><text x="296" y="152">P3</text>
+<rect x="391" y="139" width="18" height="16" fill="hsl(225, 58%, 76%)"/><text x="415" y="152">P4</text>
+<rect x="510" y="139" width="18" height="16" fill="hsl(142, 58%, 76%)"/><text x="534" y="152">P5</text>
+<rect x="629" y="139" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="653" y="152">P6</text>
+</g></svg><figcaption>FCFS на jobs.txt — образец для переноса на бумагу</figcaption></figure>
+<div class="table-wrap"><table><thead><tr><th>PID</th><th>Приход</th><th>CPU</th><th>Первый старт</th><th>Конец</th><th>Ожидание</th><th>Оборот</th></tr></thead><tbody><tr><td>P1</td><td>0</td><td>7</td><td>0</td><td>7</td><td>0</td><td>7</td></tr><tr><td>P2</td><td>2</td><td>4</td><td>7</td><td>11</td><td>5</td><td>9</td></tr><tr><td>P3</td><td>3</td><td>1</td><td>11</td><td>12</td><td>8</td><td>9</td></tr><tr><td>P4</td><td>5</td><td>6</td><td>12</td><td>18</td><td>7</td><td>13</td></tr><tr><td>P5</td><td>6</td><td>3</td><td>18</td><td>21</td><td>12</td><td>15</td></tr><tr><td>P6</td><td>8</td><td>2</td><td>21</td><td>23</td><td>13</td><td>15</td></tr></tbody></table></div>
+<p>Ручной способ: start первого процесса = arrival; start следующего = max(его arrival, completion предыдущего); completion = start + burst. Например, P2: start = max(2, 7) = 7, completion = 11, W = 7 − 2 = 5, T = 11 − 2 = 9.</p>
+<p>Среднее ожидание FCFS: (0 + 5 + 8 + 7 + 12 + 13) / 6 = 7.50. Средний оборот = 11.33.</p>
+<p>Требование о бумаге: перерисуйте диаграмму, расчёты и таблицу от руки, сфотографируйте и сохраните assets/fcfs_jobs_handwritten.jpg. Добавьте фото в README.md указанной там Markdown-строкой. Электронная диаграмма не заменяет требуемое фото; это единственная физическая часть задания, которую программа не выполняет.</p>
+<h3>А2–А4. Сравнение FCFS, SJF, RR q=2 и самопроверка</h3>
+<div class="table-wrap"><table><thead><tr><th>Алгоритм</th><th>Среднее ожидание</th><th>Средний оборот</th><th>Средний отклик</th><th>Переключения</th></tr></thead><tbody><tr><td>FCFS</td><td>7.50</td><td>11.33</td><td>7.50</td><td>5</td></tr><tr><td>SJF</td><td>5.17</td><td>9.00</td><td>5.17</td><td>5</td></tr><tr><td>RR q=2</td><td>8.33</td><td>12.17</td><td>3.17</td><td>12</td></tr></tbody></table></div>
+<p>Из трёх базовых алгоритмов для jobs.txt лучший по среднему ожиданию и обороту — SJF: 5.17 и 9.00. Он выбирает короткие задачи после завершения текущей. RR q=2 быстрее даёт первый отклик (3.17), но повышает среднее ожидание. Поэтому слово «лучший» зависит от выбранной метрики.</p>
+<div class="table-wrap"><table><thead><tr><th>set1: алгоритм</th><th>Ожидание вручную</th><th>Ожидание программы</th><th>Оборот программы</th><th>Проверка</th></tr></thead><tbody><tr><td>FCFS</td><td>8.75</td><td>8.75</td><td>15.25</td><td>PASS</td></tr><tr><td>SJF</td><td>7.75</td><td>7.75</td><td>14.25</td><td>PASS</td></tr><tr><td>RR q=2</td><td>12.75</td><td>12.75</td><td>19.25</td><td>PASS</td></tr></tbody></table></div>
+<p>PASS в этой таблице означает совпадение первых запусков, завершений и ожиданий каждого процесса с независимо рассчитанными контрольными значениями в reporting.py и тестах. Дополнительная внешняя сверка с опубликованными результатами ПР-5 приведена ниже.</p>
+<figure><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="189" viewBox="0 0 1120 189" role="img" aria-label="jobs.txt — SJF">
+<rect width="100%" height="100%" fill="#fff"/>
+<g font-family="Arial,sans-serif" font-size="13" fill="#18283b">
+<text x="24" y="28" font-size="19" font-weight="bold">jobs.txt — SJF</text>
+<rect x="40" y="52" width="182" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [0, 7)</title></rect>
+<text x="131.0" y="73" text-anchor="middle">P1</text>
+<rect x="222" y="52" width="26" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [7, 8)</title></rect>
+<rect x="248" y="52" width="52" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P6: [8, 10)</title></rect>
+<text x="274.0" y="73" text-anchor="middle">P6</text>
+<rect x="300" y="52" width="78" height="32" fill="hsl(142, 58%, 76%)" stroke="#fff"><title>P5: [10, 13)</title></rect>
+<text x="339.0" y="73" text-anchor="middle">P5</text>
+<rect x="378" y="52" width="104" height="32" fill="hsl(218, 58%, 76%)" stroke="#fff"><title>P2: [13, 17)</title></rect>
+<text x="430.0" y="73" text-anchor="middle">P2</text>
+<rect x="482" y="52" width="156" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [17, 23)</title></rect>
+<text x="560.0" y="73" text-anchor="middle">P4</text>
+<path d="M40,84v6" stroke="#64748b"/><text x="40" y="108" text-anchor="middle">0</text>
+<path d="M170,84v6" stroke="#64748b"/><text x="170" y="108" text-anchor="middle">5</text>
+<path d="M222,84v6" stroke="#64748b"/><text x="222" y="108" text-anchor="middle">7</text>
+<path d="M248,84v6" stroke="#64748b"/><text x="248" y="108" text-anchor="middle">8</text>
+<path d="M300,84v6" stroke="#64748b"/><text x="300" y="108" text-anchor="middle">10</text>
+<path d="M378,84v6" stroke="#64748b"/><text x="378" y="108" text-anchor="middle">13</text>
+<path d="M430,84v6" stroke="#64748b"/><text x="430" y="108" text-anchor="middle">15</text>
+<path d="M482,84v6" stroke="#64748b"/><text x="482" y="108" text-anchor="middle">17</text>
+<path d="M560,84v6" stroke="#64748b"/><text x="560" y="108" text-anchor="middle">20</text>
+<path d="M638,84v6" stroke="#64748b"/><text x="638" y="108" text-anchor="middle">23</text>
+<rect x="34" y="139" width="18" height="16" fill="hsl(9, 58%, 76%)"/><text x="58" y="152">P1</text>
+<rect x="153" y="139" width="18" height="16" fill="hsl(218, 58%, 76%)"/><text x="177" y="152">P2</text>
+<rect x="272" y="139" width="18" height="16" fill="hsl(123, 58%, 76%)"/><text x="296" y="152">P3</text>
+<rect x="391" y="139" width="18" height="16" fill="hsl(225, 58%, 76%)"/><text x="415" y="152">P4</text>
+<rect x="510" y="139" width="18" height="16" fill="hsl(142, 58%, 76%)"/><text x="534" y="152">P5</text>
+<rect x="629" y="139" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="653" y="152">P6</text>
+</g></svg><figcaption>SJF на jobs.txt</figcaption></figure>
+<figure><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="189" viewBox="0 0 1120 189" role="img" aria-label="jobs.txt — RR q=2">
+<rect width="100%" height="100%" fill="#fff"/>
+<g font-family="Arial,sans-serif" font-size="13" fill="#18283b">
+<text x="24" y="28" font-size="19" font-weight="bold">jobs.txt — RR q=2</text>
+<rect x="40" y="52" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [0, 2)</title></rect>
+<text x="66.0" y="73" text-anchor="middle">P1</text>
+<rect x="92" y="52" width="52" height="32" fill="hsl(218, 58%, 76%)" stroke="#fff"><title>P2: [2, 4)</title></rect>
+<text x="118.0" y="73" text-anchor="middle">P2</text>
+<rect x="144" y="52" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [4, 6)</title></rect>
+<text x="170.0" y="73" text-anchor="middle">P1</text>
+<rect x="196" y="52" width="26" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [6, 7)</title></rect>
+<rect x="222" y="52" width="52" height="32" fill="hsl(218, 58%, 76%)" stroke="#fff"><title>P2: [7, 9)</title></rect>
+<text x="248.0" y="73" text-anchor="middle">P2</text>
+<rect x="274" y="52" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [9, 11)</title></rect>
+<text x="300.0" y="73" text-anchor="middle">P4</text>
+<rect x="326" y="52" width="52" height="32" fill="hsl(142, 58%, 76%)" stroke="#fff"><title>P5: [11, 13)</title></rect>
+<text x="352.0" y="73" text-anchor="middle">P5</text>
+<rect x="378" y="52" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [13, 15)</title></rect>
+<text x="404.0" y="73" text-anchor="middle">P1</text>
+<rect x="430" y="52" width="52" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P6: [15, 17)</title></rect>
+<text x="456.0" y="73" text-anchor="middle">P6</text>
+<rect x="482" y="52" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [17, 19)</title></rect>
+<text x="508.0" y="73" text-anchor="middle">P4</text>
+<rect x="534" y="52" width="26" height="32" fill="hsl(142, 58%, 76%)" stroke="#fff"><title>P5: [19, 20)</title></rect>
+<rect x="560" y="52" width="26" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [20, 21)</title></rect>
+<rect x="586" y="52" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [21, 23)</title></rect>
+<text x="612.0" y="73" text-anchor="middle">P4</text>
+<path d="M40,84v6" stroke="#64748b"/><text x="40" y="108" text-anchor="middle">0</text>
+<path d="M92,84v6" stroke="#64748b"/><text x="92" y="108" text-anchor="middle">2</text>
+<path d="M144,84v6" stroke="#64748b"/><text x="144" y="108" text-anchor="middle">4</text>
+<path d="M170,84v6" stroke="#64748b"/><text x="170" y="108" text-anchor="middle">5</text>
+<path d="M196,84v6" stroke="#64748b"/><text x="196" y="108" text-anchor="middle">6</text>
+<path d="M222,84v6" stroke="#64748b"/><text x="222" y="108" text-anchor="middle">7</text>
+<path d="M274,84v6" stroke="#64748b"/><text x="274" y="108" text-anchor="middle">9</text>
+<path d="M300,84v6" stroke="#64748b"/><text x="300" y="108" text-anchor="middle">10</text>
+<path d="M326,84v6" stroke="#64748b"/><text x="326" y="108" text-anchor="middle">11</text>
+<path d="M378,84v6" stroke="#64748b"/><text x="378" y="108" text-anchor="middle">13</text>
+<path d="M430,84v6" stroke="#64748b"/><text x="430" y="108" text-anchor="middle">15</text>
+<path d="M482,84v6" stroke="#64748b"/><text x="482" y="108" text-anchor="middle">17</text>
+<path d="M534,84v6" stroke="#64748b"/><text x="534" y="108" text-anchor="middle">19</text>
+<path d="M560,84v6" stroke="#64748b"/><text x="560" y="108" text-anchor="middle">20</text>
+<path d="M586,84v6" stroke="#64748b"/><text x="586" y="108" text-anchor="middle">21</text>
+<path d="M638,84v6" stroke="#64748b"/><text x="638" y="108" text-anchor="middle">23</text>
+<rect x="34" y="139" width="18" height="16" fill="hsl(9, 58%, 76%)"/><text x="58" y="152">P1</text>
+<rect x="153" y="139" width="18" height="16" fill="hsl(218, 58%, 76%)"/><text x="177" y="152">P2</text>
+<rect x="272" y="139" width="18" height="16" fill="hsl(123, 58%, 76%)"/><text x="296" y="152">P3</text>
+<rect x="391" y="139" width="18" height="16" fill="hsl(225, 58%, 76%)"/><text x="415" y="152">P4</text>
+<rect x="510" y="139" width="18" height="16" fill="hsl(142, 58%, 76%)"/><text x="534" y="152">P5</text>
+<rect x="629" y="139" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="653" y="152">P6</text>
+</g></svg><figcaption>RR q=2 на jobs.txt</figcaption></figure>
+<h3>А3. Внешняя сверка с ПР-5 из GitHub</h3>
+<p>Проверен снимок aktan228/operation_system_practice_tasks, commit 07f7b4bf1721ca904d997848e9c2a885a70abfcf, дата проверки 2026-10-29. Исходные файлы снимка сохранены в reference/pr5, их Git blob SHA проверяются перед каждым запуском сверки. Все 5 опубликованных расписаний и метрик совпали; дополнительно совпали 64 расписания на четырёх исходных наборах проекта.</p>
+<p><a href="https://github.com/aktan228/operation_system_practice_tasks/tree/07f7b4bf1721ca904d997848e9c2a885a70abfcf/pr5">Источник: ПР-5, README и опубликованные результаты</a></p>
+<div class="table-wrap"><table><thead><tr><th>Проверка опубликованного результата</th><th>Вход</th><th>Ожидание</th><th>Оборот</th><th>Отклик</th><th>Статус</th></tr></thead><tbody><tr><td>FCFS</td><td>set1 проекта</td><td>8.75</td><td>15.25</td><td>8.75</td><td>PASS</td></tr><tr><td>SJF</td><td>set1 проекта</td><td>7.75</td><td>14.25</td><td>7.75</td><td>PASS</td></tr><tr><td>SRTF</td><td>set1 проекта</td><td>6.50</td><td>13.00</td><td>4.25</td><td>PASS</td></tr><tr><td>RR q=3</td><td>set1 проекта</td><td>13.50</td><td>20.00</td><td>3.00</td><td>PASS</td></tr><tr><td>PRIORITY</td><td>set1 репозитория</td><td>6.50</td><td>13.00</td><td>4.25</td><td>PASS</td></tr></tbody></table></div>
+<p>У set1 в обоих источниках одинаковые PID, arrival и burst, но приоритеты разные: в проекте [2, 3, 1, 4], в ПР-5 [3, 1, 4, 2]. Поэтому FCFS, SJF, SRTF и RR сопоставляются на set1 проекта, а опубликованный Priority проверен на set1 репозитория. Приоритеты исходного файла проекта сохранены; его результат Priority закономерно отличается и не объявляется ошибкой.</p>
+<p>Опубликованный RR использует q=3: ожидание 13,50, оборот 20,00, отклик 3,00. Для задания проекта используется q=2: ожидание 12,75, оборот 19,25, отклик 2,00 на set1. RR q=2 дополнительно проверен против реализации simulate из ПР-5 в числе 64 сопоставлений. Нельзя сравнивать значения RR при разных квантах как один контрольный пример.</p>
+<p>README репозитория сообщает о противоречии в исходном эталоне FCFS: 9,25 и 15,75 вместо 8,75 и 15,25. Наш ручной расчёт и опубликованное расписание подтверждают 8,75 и 15,25. Сам оригинал преподавательского условия по ссылке не найден, поэтому его проверка отдельно не заявляется.</p>
+<p>Важное ограничение проверки: полный sched.py из репозитория содержит SyntaxError в строке 149 — постороннее alidate перед ключом turnaround. Полный внешний скрипт и его тесты не объявляются успешно запущенными. Для 64 сопоставлений загружается только просмотренная неизменённая часть исходника до функции metrics: определения Process, validate и simulate. Исходник в снимке не исправляется. Пять сохранённых результатов дополнительно проверены независимо от этой загрузки.</p>
+<p>В 64 сопоставления входят четыре набора × 16 вариантов: FCFS, SJF, SRTF, Priority без старения, Priority со старением 2 и 3, RR с квантами 1…10. Сравнивается полная последовательность выполнения, при этом соседние интервалы одного PID объединяются, а IDLE приводится к одному обозначению. MLFQ в ПР-5 отсутствует и проверяется собственными тестами проекта.</p>
+<h2>Б. Основной блок</h2>
+<h3>Б1. Пять алгоритмов на jobs.txt</h3>
+<div class="table-wrap"><table><thead><tr><th>Алгоритм</th><th>Среднее ожидание</th><th>Средний оборот</th><th>Средний отклик</th><th>Переключения</th></tr></thead><tbody><tr><td>FCFS</td><td>7.50</td><td>11.33</td><td>7.50</td><td>5</td></tr><tr><td>SJF</td><td>5.17</td><td>9.00</td><td>5.17</td><td>5</td></tr><tr><td>RR q=2</td><td>8.33</td><td>12.17</td><td>3.17</td><td>12</td></tr><tr><td>SRTF</td><td>4.33</td><td>8.17</td><td>2.50</td><td>7</td></tr><tr><td>PRIORITY</td><td>7.50</td><td>11.33</td><td>5.17</td><td>7</td></tr></tbody></table></div>
+<h3>Б2. Пять алгоритмов на mixed.txt</h3>
+<div class="table-wrap"><table><thead><tr><th>Алгоритм</th><th>Среднее ожидание</th><th>Средний оборот</th><th>Средний отклик</th><th>Переключения</th></tr></thead><tbody><tr><td>FCFS</td><td>93.28</td><td>102.00</td><td>93.28</td><td>17</td></tr><tr><td>SJF</td><td>32.67</td><td>41.39</td><td>32.67</td><td>17</td></tr><tr><td>RR q=2</td><td>30.83</td><td>39.56</td><td>8.61</td><td>76</td></tr><tr><td>SRTF</td><td>12.28</td><td>21.00</td><td>6.33</td><td>23</td></tr><tr><td>PRIORITY</td><td>13.00</td><td>21.72</td><td>10.83</td><td>24</td></tr></tbody></table></div>
+<p>В mixed.txt короткими считаем процессы burst ≤ 4, длинными — burst &gt; 4: в исходном файле это 15 и 3 процесса соответственно. Общая средняя может скрывать задержки коротких запросов, поэтому ниже приведена отдельная оценка их отклика и ожидания.</p>
+<div class="table-wrap"><table><thead><tr><th>Алгоритм</th><th>Отклик коротких</th><th>Ожидание коротких</th><th>Последнее завершение длинных</th></tr></thead><tbody><tr><td>FCFS</td><td>104.67</td><td>104.67</td><td>122</td></tr><tr><td>SJF</td><td>27.27</td><td>27.27</td><td>157</td></tr><tr><td>RR q=2</td><td>9.93</td><td>15.87</td><td>157</td></tr><tr><td>SRTF</td><td>0.47</td><td>0.47</td><td>157</td></tr><tr><td>PRIORITY</td><td>0.40</td><td>0.53</td><td>157</td></tr></tbody></table></div>
+<h3>Б3. RR: кванты 1…10 на mixed.txt</h3>
+<div class="table-wrap"><table><thead><tr><th>Квант</th><th>Среднее ожидание</th><th>Средний отклик</th><th>Переключения</th></tr></thead><tbody><tr><td>1</td><td>29.78</td><td>4.39</td><td>145</td></tr><tr><td>2</td><td>30.83</td><td>8.61</td><td>76</td></tr><tr><td>3</td><td>33.28</td><td>12.33</td><td>57</td></tr><tr><td>4</td><td>32.50</td><td>15.78</td><td>42</td></tr><tr><td>5</td><td>35.61</td><td>19.39</td><td>36</td></tr><tr><td>6</td><td>37.39</td><td>21.33</td><td>33</td></tr><tr><td>7</td><td>41.11</td><td>24.78</td><td>31</td></tr><tr><td>8</td><td>42.78</td><td>26.44</td><td>29</td></tr><tr><td>9</td><td>45.89</td><td>29.83</td><td>28</td></tr><tr><td>10</td><td>47.00</td><td>31.33</td><td>26</td></tr></tbody></table></div>
+<figure><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="620" viewBox="0 0 1120 620" role="img" aria-label="RR: квант и метрики">
+<rect width="100%" height="100%" fill="white"/>
+<g font-family="Arial,sans-serif" font-size="13" fill="#18283b">
+<text x="24" y="28" font-size="19" font-weight="bold">RR на mixed.txt: влияние кванта</text>
+<text x="32" y="58" font-weight="bold">Среднее ожидание</text>
+<path d="M80,180.0H1060" stroke="#e2e8f0"/><text x="68" y="184.0" text-anchor="end">0.0</text>
+<path d="M80,152.5H1060" stroke="#e2e8f0"/><text x="68" y="156.5" text-anchor="end">13.5</text>
+<path d="M80,125.0H1060" stroke="#e2e8f0"/><text x="68" y="129.0" text-anchor="end">27.0</text>
+<path d="M80,97.5H1060" stroke="#e2e8f0"/><text x="68" y="101.5" text-anchor="end">40.5</text>
+<path d="M80,70.0H1060" stroke="#e2e8f0"/><text x="68" y="74.0" text-anchor="end">54.0</text>
+<polyline points="80.00,119.40 188.89,117.25 297.78,112.27 406.67,113.86 515.56,107.53 624.44,103.91 733.33,96.33 842.22,92.94 951.11,86.61 1060.00,84.35" fill="none" stroke="#2563eb" stroke-width="3"/>
+<circle cx="80.0" cy="119.39767704800082" r="4" fill="#2563eb"><title>q=1: 29.78</title></circle><text x="80.0" y="202" text-anchor="middle">1</text>
+<circle cx="188.88888888888889" cy="117.24946037619488" r="4" fill="#2563eb"><title>q=2: 30.83</title></circle><text x="188.88888888888889" y="202" text-anchor="middle">2</text>
+<circle cx="297.77777777777777" cy="112.27464282043375" r="4" fill="#2563eb"><title>q=3: 33.28</title></circle><text x="297.77777777777777" y="202" text-anchor="middle">3</text>
+<circle cx="406.6666666666667" cy="113.85753931544866" r="4" fill="#2563eb"><title>q=4: 32.50</title></circle><text x="406.6666666666667" y="202" text-anchor="middle">4</text>
+<circle cx="515.5555555555555" cy="107.52595333538903" r="4" fill="#2563eb"><title>q=5: 35.61</title></circle><text x="515.5555555555555" y="202" text-anchor="middle">5</text>
+<circle cx="624.4444444444445" cy="103.9079042039264" r="4" fill="#2563eb"><title>q=6: 37.39</title></circle><text x="624.4444444444445" y="202" text-anchor="middle">6</text>
+<circle cx="733.3333333333334" cy="96.33261383492649" r="4" fill="#2563eb"><title>q=7: 41.11</title></circle><text x="733.3333333333334" y="202" text-anchor="middle">7</text>
+<circle cx="842.2222222222222" cy="92.94069277418028" r="4" fill="#2563eb"><title>q=8: 42.78</title></circle><text x="842.2222222222222" y="202" text-anchor="middle">8</text>
+<circle cx="951.1111111111111" cy="86.60910679412068" r="4" fill="#2563eb"><title>q=9: 45.89</title></circle><text x="951.1111111111111" y="202" text-anchor="middle">9</text>
+<circle cx="1060.0" cy="84.34782608695652" r="4" fill="#2563eb"><title>q=10: 47.00</title></circle><text x="1060.0" y="202" text-anchor="middle">10</text>
+<text x="32" y="238" font-weight="bold">Средний отклик</text>
+<path d="M80,360.0H1060" stroke="#e2e8f0"/><text x="68" y="364.0" text-anchor="end">0.0</text>
+<path d="M80,332.5H1060" stroke="#e2e8f0"/><text x="68" y="336.5" text-anchor="end">9.0</text>
+<path d="M80,305.0H1060" stroke="#e2e8f0"/><text x="68" y="309.0" text-anchor="end">18.0</text>
+<path d="M80,277.5H1060" stroke="#e2e8f0"/><text x="68" y="281.5" text-anchor="end">27.0</text>
+<path d="M80,250.0H1060" stroke="#e2e8f0"/><text x="68" y="254.0" text-anchor="end">36.0</text>
+<polyline points="80.00,346.60 188.89,333.71 297.78,322.35 406.67,311.83 515.56,300.81 624.44,294.88 733.33,284.36 842.22,279.27 951.11,268.93 1060.00,264.35" fill="none" stroke="#0f766e" stroke-width="3"/>
+<circle cx="80.0" cy="346.6019118100524" r="4" fill="#0f766e"><title>q=1: 4.39</title></circle><text x="80.0" y="382" text-anchor="middle">1</text>
+<circle cx="188.88888888888889" cy="333.7126117792168" r="4" fill="#0f766e"><title>q=2: 8.61</title></circle><text x="188.88888888888889" y="382" text-anchor="middle">2</text>
+<circle cx="297.77777777777777" cy="322.3496762257169" r="4" fill="#0f766e"><title>q=3: 12.33</title></circle><text x="297.77777777777777" y="382" text-anchor="middle">3</text>
+<circle cx="406.6666666666667" cy="311.83472093740363" r="4" fill="#0f766e"><title>q=4: 15.78</title></circle><text x="406.6666666666667" y="382" text-anchor="middle">4</text>
+<circle cx="515.5555555555555" cy="300.8109774899784" r="4" fill="#0f766e"><title>q=5: 19.39</title></circle><text x="515.5555555555555" y="382" text-anchor="middle">5</text>
+<circle cx="624.4444444444445" cy="294.8751156336725" r="4" fill="#0f766e"><title>q=6: 21.33</title></circle><text x="624.4444444444445" y="382" text-anchor="middle">6</text>
+<circle cx="733.3333333333334" cy="284.36016034535925" r="4" fill="#0f766e"><title>q=7: 24.78</title></circle><text x="733.3333333333334" y="382" text-anchor="middle">7</text>
+<circle cx="842.2222222222222" cy="279.2722787542399" r="4" fill="#0f766e"><title>q=8: 26.44</title></circle><text x="842.2222222222222" y="382" text-anchor="middle">8</text>
+<circle cx="951.1111111111111" cy="268.9269195189639" r="4" fill="#0f766e"><title>q=9: 29.83</title></circle><text x="951.1111111111111" y="382" text-anchor="middle">9</text>
+<circle cx="1060.0" cy="264.3478260869565" r="4" fill="#0f766e"><title>q=10: 31.33</title></circle><text x="1060.0" y="382" text-anchor="middle">10</text>
+<text x="32" y="418" font-weight="bold">Переключения между процессами</text>
+<path d="M80,540.0H1060" stroke="#e2e8f0"/><text x="68" y="544.0" text-anchor="end">0.0</text>
+<path d="M80,512.5H1060" stroke="#e2e8f0"/><text x="68" y="516.5" text-anchor="end">41.7</text>
+<path d="M80,485.0H1060" stroke="#e2e8f0"/><text x="68" y="489.0" text-anchor="end">83.4</text>
+<path d="M80,457.5H1060" stroke="#e2e8f0"/><text x="68" y="461.5" text-anchor="end">125.1</text>
+<path d="M80,430.0H1060" stroke="#e2e8f0"/><text x="68" y="434.0" text-anchor="end">166.8</text>
+<polyline points="80.00,444.35 188.89,489.87 297.78,502.40 406.67,512.29 515.56,516.25 624.44,518.23 733.33,519.55 842.22,520.87 951.11,521.53 1060.00,522.85" fill="none" stroke="#b45309" stroke-width="3"/>
+<circle cx="80.0" cy="444.3478260869565" r="4" fill="#b45309"><title>q=1: 145.00</title></circle><text x="80.0" y="562" text-anchor="middle">1</text>
+<circle cx="188.88888888888889" cy="489.86506746626685" r="4" fill="#b45309"><title>q=2: 76.00</title></circle><text x="188.88888888888889" y="562" text-anchor="middle">2</text>
+<circle cx="297.77777777777777" cy="502.39880059970017" r="4" fill="#b45309"><title>q=3: 57.00</title></circle><text x="297.77777777777777" y="562" text-anchor="middle">3</text>
+<circle cx="406.6666666666667" cy="512.2938530734633" r="4" fill="#b45309"><title>q=4: 42.00</title></circle><text x="406.6666666666667" y="562" text-anchor="middle">4</text>
+<circle cx="515.5555555555555" cy="516.2518740629686" r="4" fill="#b45309"><title>q=5: 36.00</title></circle><text x="515.5555555555555" y="562" text-anchor="middle">5</text>
+<circle cx="624.4444444444445" cy="518.2308845577211" r="4" fill="#b45309"><title>q=6: 33.00</title></circle><text x="624.4444444444445" y="562" text-anchor="middle">6</text>
+<circle cx="733.3333333333334" cy="519.5502248875562" r="4" fill="#b45309"><title>q=7: 31.00</title></circle><text x="733.3333333333334" y="562" text-anchor="middle">7</text>
+<circle cx="842.2222222222222" cy="520.8695652173913" r="4" fill="#b45309"><title>q=8: 29.00</title></circle><text x="842.2222222222222" y="562" text-anchor="middle">8</text>
+<circle cx="951.1111111111111" cy="521.5292353823088" r="4" fill="#b45309"><title>q=9: 28.00</title></circle><text x="951.1111111111111" y="562" text-anchor="middle">9</text>
+<circle cx="1060.0" cy="522.8485757121439" r="4" fill="#b45309"><title>q=10: 26.00</title></circle><text x="1060.0" y="562" text-anchor="middle">10</text>
+<text x="1060" y="612" text-anchor="end">Квант q, единицы времени</text></g></svg><figcaption>Квант RR и три метрики (раздельные шкалы)</figcaption></figure>
+<h3>Б4. Рекомендация заказчику</h3>
+<p>Если длительности burst заранее известны, на этом наборе рекомендован SRTF: ожидание 12.28, оборот 21.00; средний отклик коротких запросов 0.47. Квант SRTF не нужен. Все три длинных процесса в конечном наборе завершаются, но при бесконечном потоке коротких задач SRTF сам по себе не гарантирует отсутствие голодания.</p>
+<p>Если выбирать RR, q=1 даёт минимальные в эксперименте ожидание 29.78 и отклик 4.39, ценой 145 переключений. Практический компромисс — q=2: ожидание 30.83, отклик 8.61, 76 переключений (на 47.6% меньше). При нулевой цене переключений q=1 выигрывает по указанным временам; выбор q=2 мотивирован уменьшением количества переключений, а не доказанным минимумом суммарных затрат. Для выбора реального кванта нужно измерить стоимость переключения.</p>
+<figure><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="486" viewBox="0 0 1120 486" role="img" aria-label="mixed.txt — FCFS">
+<rect width="100%" height="100%" fill="#fff"/>
+<g font-family="Arial,sans-serif" font-size="13" fill="#18283b">
+<text x="24" y="28" font-size="19" font-weight="bold">mixed.txt — FCFS</text>
+<rect x="40" y="52" width="1040" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [0, 40)</title></rect>
+<text x="560.0" y="73" text-anchor="middle">P1</text>
+<path d="M40,84v6" stroke="#64748b"/><text x="40" y="108" text-anchor="middle">0</text>
+<path d="M170,84v6" stroke="#64748b"/><text x="170" y="108" text-anchor="middle">5</text>
+<path d="M300,84v6" stroke="#64748b"/><text x="300" y="108" text-anchor="middle">10</text>
+<path d="M430,84v6" stroke="#64748b"/><text x="430" y="108" text-anchor="middle">15</text>
+<path d="M560,84v6" stroke="#64748b"/><text x="560" y="108" text-anchor="middle">20</text>
+<path d="M690,84v6" stroke="#64748b"/><text x="690" y="108" text-anchor="middle">25</text>
+<path d="M820,84v6" stroke="#64748b"/><text x="820" y="108" text-anchor="middle">30</text>
+<path d="M950,84v6" stroke="#64748b"/><text x="950" y="108" text-anchor="middle">35</text>
+<path d="M1080,84v6" stroke="#64748b"/><text x="1080" y="108" text-anchor="middle">40</text>
+<rect x="40" y="142" width="52" height="32" fill="hsl(218, 58%, 76%)" stroke="#fff"><title>P2: [40, 42)</title></rect>
+<text x="66.0" y="163" text-anchor="middle">P2</text>
+<rect x="92" y="142" width="910" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [42, 77)</title></rect>
+<text x="547.0" y="163" text-anchor="middle">P3</text>
+<rect x="1002" y="142" width="78" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [77, 122)</title></rect>
+<text x="1041.0" y="163" text-anchor="middle">P4</text>
+<path d="M40,174v6" stroke="#64748b"/><text x="40" y="198" text-anchor="middle">40</text>
+<path d="M170,174v6" stroke="#64748b"/><text x="170" y="198" text-anchor="middle">45</text>
+<path d="M300,174v6" stroke="#64748b"/><text x="300" y="198" text-anchor="middle">50</text>
+<path d="M430,174v6" stroke="#64748b"/><text x="430" y="198" text-anchor="middle">55</text>
+<path d="M560,174v6" stroke="#64748b"/><text x="560" y="198" text-anchor="middle">60</text>
+<path d="M690,174v6" stroke="#64748b"/><text x="690" y="198" text-anchor="middle">65</text>
+<path d="M820,174v6" stroke="#64748b"/><text x="820" y="198" text-anchor="middle">70</text>
+<path d="M950,174v6" stroke="#64748b"/><text x="950" y="198" text-anchor="middle">75</text>
+<path d="M1080,174v6" stroke="#64748b"/><text x="1080" y="198" text-anchor="middle">80</text>
+<rect x="40" y="232" width="1040" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [77, 122)</title></rect>
+<text x="560.0" y="253" text-anchor="middle">P4</text>
+<path d="M40,264v6" stroke="#64748b"/><text x="40" y="288" text-anchor="middle">80</text>
+<path d="M170,264v6" stroke="#64748b"/><text x="170" y="288" text-anchor="middle">85</text>
+<path d="M300,264v6" stroke="#64748b"/><text x="300" y="288" text-anchor="middle">90</text>
+<path d="M430,264v6" stroke="#64748b"/><text x="430" y="288" text-anchor="middle">95</text>
+<path d="M560,264v6" stroke="#64748b"/><text x="560" y="288" text-anchor="middle">100</text>
+<path d="M690,264v6" stroke="#64748b"/><text x="690" y="288" text-anchor="middle">105</text>
+<path d="M820,264v6" stroke="#64748b"/><text x="820" y="288" text-anchor="middle">110</text>
+<path d="M950,264v6" stroke="#64748b"/><text x="950" y="288" text-anchor="middle">115</text>
+<path d="M1080,264v6" stroke="#64748b"/><text x="1080" y="288" text-anchor="middle">120</text>
+<rect x="40" y="322" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [77, 122)</title></rect>
+<text x="66.0" y="343" text-anchor="middle">P4</text>
+<rect x="92" y="322" width="26" height="32" fill="hsl(142, 58%, 76%)" stroke="#fff"><title>P5: [122, 123)</title></rect>
+<rect x="118" y="322" width="26" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P6: [123, 124)</title></rect>
+<rect x="144" y="322" width="104" height="32" fill="hsl(240, 58%, 76%)" stroke="#fff"><title>P7: [124, 128)</title></rect>
+<text x="196.0" y="343" text-anchor="middle">P7</text>
+<rect x="248" y="322" width="52" height="32" fill="hsl(173, 58%, 76%)" stroke="#fff"><title>P8: [128, 130)</title></rect>
+<text x="274.0" y="343" text-anchor="middle">P8</text>
+<rect x="300" y="322" width="52" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P9: [130, 132)</title></rect>
+<text x="326.0" y="343" text-anchor="middle">P9</text>
+<rect x="352" y="322" width="104" height="32" fill="hsl(117, 58%, 76%)" stroke="#fff"><title>P10: [132, 136)</title></rect>
+<text x="404.0" y="343" text-anchor="middle">P10</text>
+<rect x="456" y="322" width="52" height="32" fill="hsl(261, 58%, 76%)" stroke="#fff"><title>P11: [136, 138)</title></rect>
+<text x="482.0" y="343" text-anchor="middle">P11</text>
+<rect x="508" y="322" width="78" height="32" fill="hsl(59, 58%, 76%)" stroke="#fff"><title>P12: [138, 141)</title></rect>
+<text x="547.0" y="343" text-anchor="middle">P12</text>
+<rect x="586" y="322" width="26" height="32" fill="hsl(267, 58%, 76%)" stroke="#fff"><title>P13: [141, 142)</title></rect>
+<rect x="612" y="322" width="26" height="32" fill="hsl(79, 58%, 76%)" stroke="#fff"><title>P14: [142, 143)</title></rect>
+<rect x="638" y="322" width="78" height="32" fill="hsl(345, 58%, 76%)" stroke="#fff"><title>P15: [143, 146)</title></rect>
+<text x="677.0" y="343" text-anchor="middle">P15</text>
+<rect x="716" y="322" width="104" height="32" fill="hsl(31, 58%, 76%)" stroke="#fff"><title>P16: [146, 150)</title></rect>
+<text x="768.0" y="343" text-anchor="middle">P16</text>
+<rect x="820" y="322" width="78" height="32" fill="hsl(101, 58%, 76%)" stroke="#fff"><title>P17: [150, 153)</title></rect>
+<text x="859.0" y="343" text-anchor="middle">P17</text>
+<rect x="898" y="322" width="104" height="32" fill="hsl(347, 58%, 76%)" stroke="#fff"><title>P18: [153, 157)</title></rect>
+<text x="950.0" y="343" text-anchor="middle">P18</text>
+<path d="M40,354v6" stroke="#64748b"/><text x="40" y="378" text-anchor="middle">120</text>
+<path d="M170,354v6" stroke="#64748b"/><text x="170" y="378" text-anchor="middle">125</text>
+<path d="M300,354v6" stroke="#64748b"/><text x="300" y="378" text-anchor="middle">130</text>
+<path d="M430,354v6" stroke="#64748b"/><text x="430" y="378" text-anchor="middle">135</text>
+<path d="M560,354v6" stroke="#64748b"/><text x="560" y="378" text-anchor="middle">140</text>
+<path d="M690,354v6" stroke="#64748b"/><text x="690" y="378" text-anchor="middle">145</text>
+<path d="M820,354v6" stroke="#64748b"/><text x="820" y="378" text-anchor="middle">150</text>
+<path d="M950,354v6" stroke="#64748b"/><text x="950" y="378" text-anchor="middle">155</text>
+<path d="M1002,354v6" stroke="#64748b"/><text x="1002" y="378" text-anchor="middle">157</text>
+<rect x="34" y="409" width="18" height="16" fill="hsl(9, 58%, 76%)"/><text x="58" y="422">P1</text>
+<rect x="153" y="409" width="18" height="16" fill="hsl(218, 58%, 76%)"/><text x="177" y="422">P2</text>
+<rect x="272" y="409" width="18" height="16" fill="hsl(123, 58%, 76%)"/><text x="296" y="422">P3</text>
+<rect x="391" y="409" width="18" height="16" fill="hsl(225, 58%, 76%)"/><text x="415" y="422">P4</text>
+<rect x="510" y="409" width="18" height="16" fill="hsl(142, 58%, 76%)"/><text x="534" y="422">P5</text>
+<rect x="629" y="409" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="653" y="422">P6</text>
+<rect x="748" y="409" width="18" height="16" fill="hsl(240, 58%, 76%)"/><text x="772" y="422">P7</text>
+<rect x="867" y="409" width="18" height="16" fill="hsl(173, 58%, 76%)"/><text x="891" y="422">P8</text>
+<rect x="986" y="409" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="1010" y="422">P9</text>
+<rect x="34" y="436" width="18" height="16" fill="hsl(117, 58%, 76%)"/><text x="58" y="449">P10</text>
+<rect x="153" y="436" width="18" height="16" fill="hsl(261, 58%, 76%)"/><text x="177" y="449">P11</text>
+<rect x="272" y="436" width="18" height="16" fill="hsl(59, 58%, 76%)"/><text x="296" y="449">P12</text>
+<rect x="391" y="436" width="18" height="16" fill="hsl(267, 58%, 76%)"/><text x="415" y="449">P13</text>
+<rect x="510" y="436" width="18" height="16" fill="hsl(79, 58%, 76%)"/><text x="534" y="449">P14</text>
+<rect x="629" y="436" width="18" height="16" fill="hsl(345, 58%, 76%)"/><text x="653" y="449">P15</text>
+<rect x="748" y="436" width="18" height="16" fill="hsl(31, 58%, 76%)"/><text x="772" y="449">P16</text>
+<rect x="867" y="436" width="18" height="16" fill="hsl(101, 58%, 76%)"/><text x="891" y="449">P17</text>
+<rect x="986" y="436" width="18" height="16" fill="hsl(347, 58%, 76%)"/><text x="1010" y="449">P18</text>
+</g></svg><figcaption>FCFS на mixed.txt</figcaption></figure>
+<figure><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="486" viewBox="0 0 1120 486" role="img" aria-label="mixed.txt — SJF">
+<rect width="100%" height="100%" fill="#fff"/>
+<g font-family="Arial,sans-serif" font-size="13" fill="#18283b">
+<text x="24" y="28" font-size="19" font-weight="bold">mixed.txt — SJF</text>
+<rect x="40" y="52" width="1040" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [0, 40)</title></rect>
+<text x="560.0" y="73" text-anchor="middle">P1</text>
+<path d="M40,84v6" stroke="#64748b"/><text x="40" y="108" text-anchor="middle">0</text>
+<path d="M170,84v6" stroke="#64748b"/><text x="170" y="108" text-anchor="middle">5</text>
+<path d="M300,84v6" stroke="#64748b"/><text x="300" y="108" text-anchor="middle">10</text>
+<path d="M430,84v6" stroke="#64748b"/><text x="430" y="108" text-anchor="middle">15</text>
+<path d="M560,84v6" stroke="#64748b"/><text x="560" y="108" text-anchor="middle">20</text>
+<path d="M690,84v6" stroke="#64748b"/><text x="690" y="108" text-anchor="middle">25</text>
+<path d="M820,84v6" stroke="#64748b"/><text x="820" y="108" text-anchor="middle">30</text>
+<path d="M950,84v6" stroke="#64748b"/><text x="950" y="108" text-anchor="middle">35</text>
+<path d="M1080,84v6" stroke="#64748b"/><text x="1080" y="108" text-anchor="middle">40</text>
+<rect x="40" y="142" width="26" height="32" fill="hsl(142, 58%, 76%)" stroke="#fff"><title>P5: [40, 41)</title></rect>
+<rect x="66" y="142" width="26" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P6: [41, 42)</title></rect>
+<rect x="92" y="142" width="26" height="32" fill="hsl(267, 58%, 76%)" stroke="#fff"><title>P13: [42, 43)</title></rect>
+<rect x="118" y="142" width="26" height="32" fill="hsl(79, 58%, 76%)" stroke="#fff"><title>P14: [43, 44)</title></rect>
+<rect x="144" y="142" width="52" height="32" fill="hsl(218, 58%, 76%)" stroke="#fff"><title>P2: [44, 46)</title></rect>
+<text x="170.0" y="163" text-anchor="middle">P2</text>
+<rect x="196" y="142" width="52" height="32" fill="hsl(173, 58%, 76%)" stroke="#fff"><title>P8: [46, 48)</title></rect>
+<text x="222.0" y="163" text-anchor="middle">P8</text>
+<rect x="248" y="142" width="52" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P9: [48, 50)</title></rect>
+<text x="274.0" y="163" text-anchor="middle">P9</text>
+<rect x="300" y="142" width="52" height="32" fill="hsl(261, 58%, 76%)" stroke="#fff"><title>P11: [50, 52)</title></rect>
+<text x="326.0" y="163" text-anchor="middle">P11</text>
+<rect x="352" y="142" width="78" height="32" fill="hsl(59, 58%, 76%)" stroke="#fff"><title>P12: [52, 55)</title></rect>
+<text x="391.0" y="163" text-anchor="middle">P12</text>
+<rect x="430" y="142" width="78" height="32" fill="hsl(345, 58%, 76%)" stroke="#fff"><title>P15: [55, 58)</title></rect>
+<text x="469.0" y="163" text-anchor="middle">P15</text>
+<rect x="508" y="142" width="78" height="32" fill="hsl(101, 58%, 76%)" stroke="#fff"><title>P17: [58, 61)</title></rect>
+<text x="547.0" y="163" text-anchor="middle">P17</text>
+<rect x="586" y="142" width="104" height="32" fill="hsl(240, 58%, 76%)" stroke="#fff"><title>P7: [61, 65)</title></rect>
+<text x="638.0" y="163" text-anchor="middle">P7</text>
+<rect x="690" y="142" width="104" height="32" fill="hsl(117, 58%, 76%)" stroke="#fff"><title>P10: [65, 69)</title></rect>
+<text x="742.0" y="163" text-anchor="middle">P10</text>
+<rect x="794" y="142" width="104" height="32" fill="hsl(31, 58%, 76%)" stroke="#fff"><title>P16: [69, 73)</title></rect>
+<text x="846.0" y="163" text-anchor="middle">P16</text>
+<rect x="898" y="142" width="104" height="32" fill="hsl(347, 58%, 76%)" stroke="#fff"><title>P18: [73, 77)</title></rect>
+<text x="950.0" y="163" text-anchor="middle">P18</text>
+<rect x="1002" y="142" width="78" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [77, 112)</title></rect>
+<text x="1041.0" y="163" text-anchor="middle">P3</text>
+<path d="M40,174v6" stroke="#64748b"/><text x="40" y="198" text-anchor="middle">40</text>
+<path d="M170,174v6" stroke="#64748b"/><text x="170" y="198" text-anchor="middle">45</text>
+<path d="M300,174v6" stroke="#64748b"/><text x="300" y="198" text-anchor="middle">50</text>
+<path d="M430,174v6" stroke="#64748b"/><text x="430" y="198" text-anchor="middle">55</text>
+<path d="M560,174v6" stroke="#64748b"/><text x="560" y="198" text-anchor="middle">60</text>
+<path d="M690,174v6" stroke="#64748b"/><text x="690" y="198" text-anchor="middle">65</text>
+<path d="M820,174v6" stroke="#64748b"/><text x="820" y="198" text-anchor="middle">70</text>
+<path d="M950,174v6" stroke="#64748b"/><text x="950" y="198" text-anchor="middle">75</text>
+<path d="M1080,174v6" stroke="#64748b"/><text x="1080" y="198" text-anchor="middle">80</text>
+<rect x="40" y="232" width="832" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [77, 112)</title></rect>
+<text x="456.0" y="253" text-anchor="middle">P3</text>
+<rect x="872" y="232" width="208" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [112, 157)</title></rect>
+<text x="976.0" y="253" text-anchor="middle">P4</text>
+<path d="M40,264v6" stroke="#64748b"/><text x="40" y="288" text-anchor="middle">80</text>
+<path d="M170,264v6" stroke="#64748b"/><text x="170" y="288" text-anchor="middle">85</text>
+<path d="M300,264v6" stroke="#64748b"/><text x="300" y="288" text-anchor="middle">90</text>
+<path d="M430,264v6" stroke="#64748b"/><text x="430" y="288" text-anchor="middle">95</text>
+<path d="M560,264v6" stroke="#64748b"/><text x="560" y="288" text-anchor="middle">100</text>
+<path d="M690,264v6" stroke="#64748b"/><text x="690" y="288" text-anchor="middle">105</text>
+<path d="M820,264v6" stroke="#64748b"/><text x="820" y="288" text-anchor="middle">110</text>
+<path d="M950,264v6" stroke="#64748b"/><text x="950" y="288" text-anchor="middle">115</text>
+<path d="M1080,264v6" stroke="#64748b"/><text x="1080" y="288" text-anchor="middle">120</text>
+<rect x="40" y="322" width="962" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [112, 157)</title></rect>
+<text x="521.0" y="343" text-anchor="middle">P4</text>
+<path d="M40,354v6" stroke="#64748b"/><text x="40" y="378" text-anchor="middle">120</text>
+<path d="M170,354v6" stroke="#64748b"/><text x="170" y="378" text-anchor="middle">125</text>
+<path d="M300,354v6" stroke="#64748b"/><text x="300" y="378" text-anchor="middle">130</text>
+<path d="M430,354v6" stroke="#64748b"/><text x="430" y="378" text-anchor="middle">135</text>
+<path d="M560,354v6" stroke="#64748b"/><text x="560" y="378" text-anchor="middle">140</text>
+<path d="M690,354v6" stroke="#64748b"/><text x="690" y="378" text-anchor="middle">145</text>
+<path d="M820,354v6" stroke="#64748b"/><text x="820" y="378" text-anchor="middle">150</text>
+<path d="M950,354v6" stroke="#64748b"/><text x="950" y="378" text-anchor="middle">155</text>
+<path d="M1002,354v6" stroke="#64748b"/><text x="1002" y="378" text-anchor="middle">157</text>
+<rect x="34" y="409" width="18" height="16" fill="hsl(9, 58%, 76%)"/><text x="58" y="422">P1</text>
+<rect x="153" y="409" width="18" height="16" fill="hsl(218, 58%, 76%)"/><text x="177" y="422">P2</text>
+<rect x="272" y="409" width="18" height="16" fill="hsl(123, 58%, 76%)"/><text x="296" y="422">P3</text>
+<rect x="391" y="409" width="18" height="16" fill="hsl(225, 58%, 76%)"/><text x="415" y="422">P4</text>
+<rect x="510" y="409" width="18" height="16" fill="hsl(142, 58%, 76%)"/><text x="534" y="422">P5</text>
+<rect x="629" y="409" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="653" y="422">P6</text>
+<rect x="748" y="409" width="18" height="16" fill="hsl(240, 58%, 76%)"/><text x="772" y="422">P7</text>
+<rect x="867" y="409" width="18" height="16" fill="hsl(173, 58%, 76%)"/><text x="891" y="422">P8</text>
+<rect x="986" y="409" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="1010" y="422">P9</text>
+<rect x="34" y="436" width="18" height="16" fill="hsl(117, 58%, 76%)"/><text x="58" y="449">P10</text>
+<rect x="153" y="436" width="18" height="16" fill="hsl(261, 58%, 76%)"/><text x="177" y="449">P11</text>
+<rect x="272" y="436" width="18" height="16" fill="hsl(59, 58%, 76%)"/><text x="296" y="449">P12</text>
+<rect x="391" y="436" width="18" height="16" fill="hsl(267, 58%, 76%)"/><text x="415" y="449">P13</text>
+<rect x="510" y="436" width="18" height="16" fill="hsl(79, 58%, 76%)"/><text x="534" y="449">P14</text>
+<rect x="629" y="436" width="18" height="16" fill="hsl(345, 58%, 76%)"/><text x="653" y="449">P15</text>
+<rect x="748" y="436" width="18" height="16" fill="hsl(31, 58%, 76%)"/><text x="772" y="449">P16</text>
+<rect x="867" y="436" width="18" height="16" fill="hsl(101, 58%, 76%)"/><text x="891" y="449">P17</text>
+<rect x="986" y="436" width="18" height="16" fill="hsl(347, 58%, 76%)"/><text x="1010" y="449">P18</text>
+</g></svg><figcaption>SJF на mixed.txt</figcaption></figure>
+<figure><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="486" viewBox="0 0 1120 486" role="img" aria-label="mixed.txt — RR q=2">
+<rect width="100%" height="100%" fill="#fff"/>
+<g font-family="Arial,sans-serif" font-size="13" fill="#18283b">
+<text x="24" y="28" font-size="19" font-weight="bold">mixed.txt — RR q=2</text>
+<rect x="40" y="52" width="104" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [0, 4)</title></rect>
+<text x="92.0" y="73" text-anchor="middle">P1</text>
+<rect x="144" y="52" width="52" height="32" fill="hsl(218, 58%, 76%)" stroke="#fff"><title>P2: [4, 6)</title></rect>
+<text x="170.0" y="73" text-anchor="middle">P2</text>
+<rect x="196" y="52" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [6, 8)</title></rect>
+<text x="222.0" y="73" text-anchor="middle">P3</text>
+<rect x="248" y="52" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [8, 10)</title></rect>
+<text x="274.0" y="73" text-anchor="middle">P1</text>
+<rect x="300" y="52" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [10, 12)</title></rect>
+<text x="326.0" y="73" text-anchor="middle">P4</text>
+<rect x="352" y="52" width="26" height="32" fill="hsl(142, 58%, 76%)" stroke="#fff"><title>P5: [12, 13)</title></rect>
+<rect x="378" y="52" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [13, 15)</title></rect>
+<text x="404.0" y="73" text-anchor="middle">P3</text>
+<rect x="430" y="52" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [15, 17)</title></rect>
+<text x="456.0" y="73" text-anchor="middle">P1</text>
+<rect x="482" y="52" width="26" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P6: [17, 18)</title></rect>
+<rect x="508" y="52" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [18, 20)</title></rect>
+<text x="534.0" y="73" text-anchor="middle">P4</text>
+<rect x="560" y="52" width="52" height="32" fill="hsl(240, 58%, 76%)" stroke="#fff"><title>P7: [20, 22)</title></rect>
+<text x="586.0" y="73" text-anchor="middle">P7</text>
+<rect x="612" y="52" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [22, 24)</title></rect>
+<text x="638.0" y="73" text-anchor="middle">P3</text>
+<rect x="664" y="52" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [24, 26)</title></rect>
+<text x="690.0" y="73" text-anchor="middle">P1</text>
+<rect x="716" y="52" width="52" height="32" fill="hsl(173, 58%, 76%)" stroke="#fff"><title>P8: [26, 28)</title></rect>
+<text x="742.0" y="73" text-anchor="middle">P8</text>
+<rect x="768" y="52" width="52" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P9: [28, 30)</title></rect>
+<text x="794.0" y="73" text-anchor="middle">P9</text>
+<rect x="820" y="52" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [30, 32)</title></rect>
+<text x="846.0" y="73" text-anchor="middle">P4</text>
+<rect x="872" y="52" width="52" height="32" fill="hsl(117, 58%, 76%)" stroke="#fff"><title>P10: [32, 34)</title></rect>
+<text x="898.0" y="73" text-anchor="middle">P10</text>
+<rect x="924" y="52" width="52" height="32" fill="hsl(240, 58%, 76%)" stroke="#fff"><title>P7: [34, 36)</title></rect>
+<text x="950.0" y="73" text-anchor="middle">P7</text>
+<rect x="976" y="52" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [36, 38)</title></rect>
+<text x="1002.0" y="73" text-anchor="middle">P3</text>
+<rect x="1028" y="52" width="52" height="32" fill="hsl(261, 58%, 76%)" stroke="#fff"><title>P11: [38, 40)</title></rect>
+<text x="1054.0" y="73" text-anchor="middle">P11</text>
+<path d="M40,84v6" stroke="#64748b"/><text x="40" y="108" text-anchor="middle">0</text>
+<path d="M170,84v6" stroke="#64748b"/><text x="170" y="108" text-anchor="middle">5</text>
+<path d="M300,84v6" stroke="#64748b"/><text x="300" y="108" text-anchor="middle">10</text>
+<path d="M430,84v6" stroke="#64748b"/><text x="430" y="108" text-anchor="middle">15</text>
+<path d="M560,84v6" stroke="#64748b"/><text x="560" y="108" text-anchor="middle">20</text>
+<path d="M690,84v6" stroke="#64748b"/><text x="690" y="108" text-anchor="middle">25</text>
+<path d="M820,84v6" stroke="#64748b"/><text x="820" y="108" text-anchor="middle">30</text>
+<path d="M950,84v6" stroke="#64748b"/><text x="950" y="108" text-anchor="middle">35</text>
+<path d="M1080,84v6" stroke="#64748b"/><text x="1080" y="108" text-anchor="middle">40</text>
+<rect x="40" y="142" width="52" height="32" fill="hsl(59, 58%, 76%)" stroke="#fff"><title>P12: [40, 42)</title></rect>
+<text x="66.0" y="163" text-anchor="middle">P12</text>
+<rect x="92" y="142" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [42, 44)</title></rect>
+<text x="118.0" y="163" text-anchor="middle">P1</text>
+<rect x="144" y="142" width="26" height="32" fill="hsl(267, 58%, 76%)" stroke="#fff"><title>P13: [44, 45)</title></rect>
+<rect x="170" y="142" width="26" height="32" fill="hsl(79, 58%, 76%)" stroke="#fff"><title>P14: [45, 46)</title></rect>
+<rect x="196" y="142" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [46, 48)</title></rect>
+<text x="222.0" y="163" text-anchor="middle">P4</text>
+<rect x="248" y="142" width="52" height="32" fill="hsl(117, 58%, 76%)" stroke="#fff"><title>P10: [48, 50)</title></rect>
+<text x="274.0" y="163" text-anchor="middle">P10</text>
+<rect x="300" y="142" width="52" height="32" fill="hsl(345, 58%, 76%)" stroke="#fff"><title>P15: [50, 52)</title></rect>
+<text x="326.0" y="163" text-anchor="middle">P15</text>
+<rect x="352" y="142" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [52, 54)</title></rect>
+<text x="378.0" y="163" text-anchor="middle">P3</text>
+<rect x="404" y="142" width="52" height="32" fill="hsl(31, 58%, 76%)" stroke="#fff"><title>P16: [54, 56)</title></rect>
+<text x="430.0" y="163" text-anchor="middle">P16</text>
+<rect x="456" y="142" width="52" height="32" fill="hsl(101, 58%, 76%)" stroke="#fff"><title>P17: [56, 58)</title></rect>
+<text x="482.0" y="163" text-anchor="middle">P17</text>
+<rect x="508" y="142" width="26" height="32" fill="hsl(59, 58%, 76%)" stroke="#fff"><title>P12: [58, 59)</title></rect>
+<rect x="534" y="142" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [59, 61)</title></rect>
+<text x="560.0" y="163" text-anchor="middle">P1</text>
+<rect x="586" y="142" width="52" height="32" fill="hsl(347, 58%, 76%)" stroke="#fff"><title>P18: [61, 63)</title></rect>
+<text x="612.0" y="163" text-anchor="middle">P18</text>
+<rect x="638" y="142" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [63, 65)</title></rect>
+<text x="664.0" y="163" text-anchor="middle">P4</text>
+<rect x="690" y="142" width="26" height="32" fill="hsl(345, 58%, 76%)" stroke="#fff"><title>P15: [65, 66)</title></rect>
+<rect x="716" y="142" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [66, 68)</title></rect>
+<text x="742.0" y="163" text-anchor="middle">P3</text>
+<rect x="768" y="142" width="52" height="32" fill="hsl(31, 58%, 76%)" stroke="#fff"><title>P16: [68, 70)</title></rect>
+<text x="794.0" y="163" text-anchor="middle">P16</text>
+<rect x="820" y="142" width="26" height="32" fill="hsl(101, 58%, 76%)" stroke="#fff"><title>P17: [70, 71)</title></rect>
+<rect x="846" y="142" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [71, 73)</title></rect>
+<text x="872.0" y="163" text-anchor="middle">P1</text>
+<rect x="898" y="142" width="52" height="32" fill="hsl(347, 58%, 76%)" stroke="#fff"><title>P18: [73, 75)</title></rect>
+<text x="924.0" y="163" text-anchor="middle">P18</text>
+<rect x="950" y="142" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [75, 77)</title></rect>
+<text x="976.0" y="163" text-anchor="middle">P4</text>
+<rect x="1002" y="142" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [77, 79)</title></rect>
+<text x="1028.0" y="163" text-anchor="middle">P3</text>
+<rect x="1054" y="142" width="26" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [79, 81)</title></rect>
+<path d="M40,174v6" stroke="#64748b"/><text x="40" y="198" text-anchor="middle">40</text>
+<path d="M170,174v6" stroke="#64748b"/><text x="170" y="198" text-anchor="middle">45</text>
+<path d="M300,174v6" stroke="#64748b"/><text x="300" y="198" text-anchor="middle">50</text>
+<path d="M430,174v6" stroke="#64748b"/><text x="430" y="198" text-anchor="middle">55</text>
+<path d="M560,174v6" stroke="#64748b"/><text x="560" y="198" text-anchor="middle">60</text>
+<path d="M690,174v6" stroke="#64748b"/><text x="690" y="198" text-anchor="middle">65</text>
+<path d="M820,174v6" stroke="#64748b"/><text x="820" y="198" text-anchor="middle">70</text>
+<path d="M950,174v6" stroke="#64748b"/><text x="950" y="198" text-anchor="middle">75</text>
+<path d="M1080,174v6" stroke="#64748b"/><text x="1080" y="198" text-anchor="middle">80</text>
+<rect x="40" y="232" width="26" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [79, 81)</title></rect>
+<rect x="66" y="232" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [81, 83)</title></rect>
+<text x="92.0" y="253" text-anchor="middle">P4</text>
+<rect x="118" y="232" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [83, 85)</title></rect>
+<text x="144.0" y="253" text-anchor="middle">P3</text>
+<rect x="170" y="232" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [85, 87)</title></rect>
+<text x="196.0" y="253" text-anchor="middle">P1</text>
+<rect x="222" y="232" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [87, 89)</title></rect>
+<text x="248.0" y="253" text-anchor="middle">P4</text>
+<rect x="274" y="232" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [89, 91)</title></rect>
+<text x="300.0" y="253" text-anchor="middle">P3</text>
+<rect x="326" y="232" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [91, 93)</title></rect>
+<text x="352.0" y="253" text-anchor="middle">P1</text>
+<rect x="378" y="232" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [93, 95)</title></rect>
+<text x="404.0" y="253" text-anchor="middle">P4</text>
+<rect x="430" y="232" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [95, 97)</title></rect>
+<text x="456.0" y="253" text-anchor="middle">P3</text>
+<rect x="482" y="232" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [97, 99)</title></rect>
+<text x="508.0" y="253" text-anchor="middle">P1</text>
+<rect x="534" y="232" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [99, 101)</title></rect>
+<text x="560.0" y="253" text-anchor="middle">P4</text>
+<rect x="586" y="232" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [101, 103)</title></rect>
+<text x="612.0" y="253" text-anchor="middle">P3</text>
+<rect x="638" y="232" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [103, 105)</title></rect>
+<text x="664.0" y="253" text-anchor="middle">P1</text>
+<rect x="690" y="232" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [105, 107)</title></rect>
+<text x="716.0" y="253" text-anchor="middle">P4</text>
+<rect x="742" y="232" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [107, 109)</title></rect>
+<text x="768.0" y="253" text-anchor="middle">P3</text>
+<rect x="794" y="232" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [109, 111)</title></rect>
+<text x="820.0" y="253" text-anchor="middle">P1</text>
+<rect x="846" y="232" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [111, 113)</title></rect>
+<text x="872.0" y="253" text-anchor="middle">P4</text>
+<rect x="898" y="232" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [113, 115)</title></rect>
+<text x="924.0" y="253" text-anchor="middle">P3</text>
+<rect x="950" y="232" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [115, 117)</title></rect>
+<text x="976.0" y="253" text-anchor="middle">P1</text>
+<rect x="1002" y="232" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [117, 119)</title></rect>
+<text x="1028.0" y="253" text-anchor="middle">P4</text>
+<rect x="1054" y="232" width="26" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [119, 121)</title></rect>
+<path d="M40,264v6" stroke="#64748b"/><text x="40" y="288" text-anchor="middle">80</text>
+<path d="M170,264v6" stroke="#64748b"/><text x="170" y="288" text-anchor="middle">85</text>
+<path d="M300,264v6" stroke="#64748b"/><text x="300" y="288" text-anchor="middle">90</text>
+<path d="M430,264v6" stroke="#64748b"/><text x="430" y="288" text-anchor="middle">95</text>
+<path d="M560,264v6" stroke="#64748b"/><text x="560" y="288" text-anchor="middle">100</text>
+<path d="M690,264v6" stroke="#64748b"/><text x="690" y="288" text-anchor="middle">105</text>
+<path d="M820,264v6" stroke="#64748b"/><text x="820" y="288" text-anchor="middle">110</text>
+<path d="M950,264v6" stroke="#64748b"/><text x="950" y="288" text-anchor="middle">115</text>
+<path d="M1080,264v6" stroke="#64748b"/><text x="1080" y="288" text-anchor="middle">120</text>
+<rect x="40" y="322" width="26" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [119, 121)</title></rect>
+<rect x="66" y="322" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [121, 123)</title></rect>
+<text x="92.0" y="343" text-anchor="middle">P1</text>
+<rect x="118" y="322" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [123, 125)</title></rect>
+<text x="144.0" y="343" text-anchor="middle">P4</text>
+<rect x="170" y="322" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [125, 127)</title></rect>
+<text x="196.0" y="343" text-anchor="middle">P3</text>
+<rect x="222" y="322" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [127, 129)</title></rect>
+<text x="248.0" y="343" text-anchor="middle">P1</text>
+<rect x="274" y="322" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [129, 131)</title></rect>
+<text x="300.0" y="343" text-anchor="middle">P4</text>
+<rect x="326" y="322" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [131, 133)</title></rect>
+<text x="352.0" y="343" text-anchor="middle">P3</text>
+<rect x="378" y="322" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [133, 135)</title></rect>
+<text x="404.0" y="343" text-anchor="middle">P1</text>
+<rect x="430" y="322" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [135, 137)</title></rect>
+<text x="456.0" y="343" text-anchor="middle">P4</text>
+<rect x="482" y="322" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [137, 139)</title></rect>
+<text x="508.0" y="343" text-anchor="middle">P3</text>
+<rect x="534" y="322" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [139, 141)</title></rect>
+<text x="560.0" y="343" text-anchor="middle">P1</text>
+<rect x="586" y="322" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [141, 143)</title></rect>
+<text x="612.0" y="343" text-anchor="middle">P4</text>
+<rect x="638" y="322" width="26" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [143, 144)</title></rect>
+<rect x="664" y="322" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [144, 146)</title></rect>
+<text x="690.0" y="343" text-anchor="middle">P1</text>
+<rect x="716" y="322" width="286" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [146, 157)</title></rect>
+<text x="859.0" y="343" text-anchor="middle">P4</text>
+<path d="M40,354v6" stroke="#64748b"/><text x="40" y="378" text-anchor="middle">120</text>
+<path d="M170,354v6" stroke="#64748b"/><text x="170" y="378" text-anchor="middle">125</text>
+<path d="M300,354v6" stroke="#64748b"/><text x="300" y="378" text-anchor="middle">130</text>
+<path d="M430,354v6" stroke="#64748b"/><text x="430" y="378" text-anchor="middle">135</text>
+<path d="M560,354v6" stroke="#64748b"/><text x="560" y="378" text-anchor="middle">140</text>
+<path d="M690,354v6" stroke="#64748b"/><text x="690" y="378" text-anchor="middle">145</text>
+<path d="M820,354v6" stroke="#64748b"/><text x="820" y="378" text-anchor="middle">150</text>
+<path d="M950,354v6" stroke="#64748b"/><text x="950" y="378" text-anchor="middle">155</text>
+<path d="M1002,354v6" stroke="#64748b"/><text x="1002" y="378" text-anchor="middle">157</text>
+<rect x="34" y="409" width="18" height="16" fill="hsl(9, 58%, 76%)"/><text x="58" y="422">P1</text>
+<rect x="153" y="409" width="18" height="16" fill="hsl(218, 58%, 76%)"/><text x="177" y="422">P2</text>
+<rect x="272" y="409" width="18" height="16" fill="hsl(123, 58%, 76%)"/><text x="296" y="422">P3</text>
+<rect x="391" y="409" width="18" height="16" fill="hsl(225, 58%, 76%)"/><text x="415" y="422">P4</text>
+<rect x="510" y="409" width="18" height="16" fill="hsl(142, 58%, 76%)"/><text x="534" y="422">P5</text>
+<rect x="629" y="409" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="653" y="422">P6</text>
+<rect x="748" y="409" width="18" height="16" fill="hsl(240, 58%, 76%)"/><text x="772" y="422">P7</text>
+<rect x="867" y="409" width="18" height="16" fill="hsl(173, 58%, 76%)"/><text x="891" y="422">P8</text>
+<rect x="986" y="409" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="1010" y="422">P9</text>
+<rect x="34" y="436" width="18" height="16" fill="hsl(117, 58%, 76%)"/><text x="58" y="449">P10</text>
+<rect x="153" y="436" width="18" height="16" fill="hsl(261, 58%, 76%)"/><text x="177" y="449">P11</text>
+<rect x="272" y="436" width="18" height="16" fill="hsl(59, 58%, 76%)"/><text x="296" y="449">P12</text>
+<rect x="391" y="436" width="18" height="16" fill="hsl(267, 58%, 76%)"/><text x="415" y="449">P13</text>
+<rect x="510" y="436" width="18" height="16" fill="hsl(79, 58%, 76%)"/><text x="534" y="449">P14</text>
+<rect x="629" y="436" width="18" height="16" fill="hsl(345, 58%, 76%)"/><text x="653" y="449">P15</text>
+<rect x="748" y="436" width="18" height="16" fill="hsl(31, 58%, 76%)"/><text x="772" y="449">P16</text>
+<rect x="867" y="436" width="18" height="16" fill="hsl(101, 58%, 76%)"/><text x="891" y="449">P17</text>
+<rect x="986" y="436" width="18" height="16" fill="hsl(347, 58%, 76%)"/><text x="1010" y="449">P18</text>
+</g></svg><figcaption>RR q=2 на mixed.txt</figcaption></figure>
+<figure><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="486" viewBox="0 0 1120 486" role="img" aria-label="mixed.txt — SRTF">
+<rect width="100%" height="100%" fill="#fff"/>
+<g font-family="Arial,sans-serif" font-size="13" fill="#18283b">
+<text x="24" y="28" font-size="19" font-weight="bold">mixed.txt — SRTF</text>
+<rect x="40" y="52" width="78" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [0, 3)</title></rect>
+<text x="79.0" y="73" text-anchor="middle">P1</text>
+<rect x="118" y="52" width="52" height="32" fill="hsl(218, 58%, 76%)" stroke="#fff"><title>P2: [3, 5)</title></rect>
+<text x="144.0" y="73" text-anchor="middle">P2</text>
+<rect x="170" y="52" width="78" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [5, 8)</title></rect>
+<text x="209.0" y="73" text-anchor="middle">P3</text>
+<rect x="248" y="52" width="26" height="32" fill="hsl(142, 58%, 76%)" stroke="#fff"><title>P5: [8, 9)</title></rect>
+<rect x="274" y="52" width="78" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [9, 12)</title></rect>
+<text x="313.0" y="73" text-anchor="middle">P3</text>
+<rect x="352" y="52" width="26" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P6: [12, 13)</title></rect>
+<rect x="378" y="52" width="26" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [13, 14)</title></rect>
+<rect x="404" y="52" width="104" height="32" fill="hsl(240, 58%, 76%)" stroke="#fff"><title>P7: [14, 18)</title></rect>
+<text x="456.0" y="73" text-anchor="middle">P7</text>
+<rect x="508" y="52" width="52" height="32" fill="hsl(173, 58%, 76%)" stroke="#fff"><title>P8: [18, 20)</title></rect>
+<text x="534.0" y="73" text-anchor="middle">P8</text>
+<rect x="560" y="52" width="52" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P9: [20, 22)</title></rect>
+<text x="586.0" y="73" text-anchor="middle">P9</text>
+<rect x="612" y="52" width="104" height="32" fill="hsl(117, 58%, 76%)" stroke="#fff"><title>P10: [22, 26)</title></rect>
+<text x="664.0" y="73" text-anchor="middle">P10</text>
+<rect x="716" y="52" width="52" height="32" fill="hsl(261, 58%, 76%)" stroke="#fff"><title>P11: [26, 28)</title></rect>
+<text x="742.0" y="73" text-anchor="middle">P11</text>
+<rect x="768" y="52" width="78" height="32" fill="hsl(59, 58%, 76%)" stroke="#fff"><title>P12: [28, 31)</title></rect>
+<text x="807.0" y="73" text-anchor="middle">P12</text>
+<rect x="846" y="52" width="26" height="32" fill="hsl(267, 58%, 76%)" stroke="#fff"><title>P13: [31, 32)</title></rect>
+<rect x="872" y="52" width="26" height="32" fill="hsl(79, 58%, 76%)" stroke="#fff"><title>P14: [32, 33)</title></rect>
+<rect x="898" y="52" width="104" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [33, 37)</title></rect>
+<text x="950.0" y="73" text-anchor="middle">P3</text>
+<rect x="1002" y="52" width="78" height="32" fill="hsl(345, 58%, 76%)" stroke="#fff"><title>P15: [37, 40)</title></rect>
+<text x="1041.0" y="73" text-anchor="middle">P15</text>
+<path d="M40,84v6" stroke="#64748b"/><text x="40" y="108" text-anchor="middle">0</text>
+<path d="M170,84v6" stroke="#64748b"/><text x="170" y="108" text-anchor="middle">5</text>
+<path d="M300,84v6" stroke="#64748b"/><text x="300" y="108" text-anchor="middle">10</text>
+<path d="M430,84v6" stroke="#64748b"/><text x="430" y="108" text-anchor="middle">15</text>
+<path d="M560,84v6" stroke="#64748b"/><text x="560" y="108" text-anchor="middle">20</text>
+<path d="M690,84v6" stroke="#64748b"/><text x="690" y="108" text-anchor="middle">25</text>
+<path d="M820,84v6" stroke="#64748b"/><text x="820" y="108" text-anchor="middle">30</text>
+<path d="M950,84v6" stroke="#64748b"/><text x="950" y="108" text-anchor="middle">35</text>
+<path d="M1080,84v6" stroke="#64748b"/><text x="1080" y="108" text-anchor="middle">40</text>
+<rect x="40" y="142" width="26" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [40, 41)</title></rect>
+<rect x="66" y="142" width="104" height="32" fill="hsl(31, 58%, 76%)" stroke="#fff"><title>P16: [41, 45)</title></rect>
+<text x="118.0" y="163" text-anchor="middle">P16</text>
+<rect x="170" y="142" width="78" height="32" fill="hsl(101, 58%, 76%)" stroke="#fff"><title>P17: [45, 48)</title></rect>
+<text x="209.0" y="163" text-anchor="middle">P17</text>
+<rect x="248" y="142" width="104" height="32" fill="hsl(347, 58%, 76%)" stroke="#fff"><title>P18: [48, 52)</title></rect>
+<text x="300.0" y="163" text-anchor="middle">P18</text>
+<rect x="352" y="142" width="598" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [52, 75)</title></rect>
+<text x="651.0" y="163" text-anchor="middle">P3</text>
+<rect x="950" y="142" width="130" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [75, 112)</title></rect>
+<text x="1015.0" y="163" text-anchor="middle">P1</text>
+<path d="M40,174v6" stroke="#64748b"/><text x="40" y="198" text-anchor="middle">40</text>
+<path d="M170,174v6" stroke="#64748b"/><text x="170" y="198" text-anchor="middle">45</text>
+<path d="M300,174v6" stroke="#64748b"/><text x="300" y="198" text-anchor="middle">50</text>
+<path d="M430,174v6" stroke="#64748b"/><text x="430" y="198" text-anchor="middle">55</text>
+<path d="M560,174v6" stroke="#64748b"/><text x="560" y="198" text-anchor="middle">60</text>
+<path d="M690,174v6" stroke="#64748b"/><text x="690" y="198" text-anchor="middle">65</text>
+<path d="M820,174v6" stroke="#64748b"/><text x="820" y="198" text-anchor="middle">70</text>
+<path d="M950,174v6" stroke="#64748b"/><text x="950" y="198" text-anchor="middle">75</text>
+<path d="M1080,174v6" stroke="#64748b"/><text x="1080" y="198" text-anchor="middle">80</text>
+<rect x="40" y="232" width="832" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [75, 112)</title></rect>
+<text x="456.0" y="253" text-anchor="middle">P1</text>
+<rect x="872" y="232" width="208" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [112, 157)</title></rect>
+<text x="976.0" y="253" text-anchor="middle">P4</text>
+<path d="M40,264v6" stroke="#64748b"/><text x="40" y="288" text-anchor="middle">80</text>
+<path d="M170,264v6" stroke="#64748b"/><text x="170" y="288" text-anchor="middle">85</text>
+<path d="M300,264v6" stroke="#64748b"/><text x="300" y="288" text-anchor="middle">90</text>
+<path d="M430,264v6" stroke="#64748b"/><text x="430" y="288" text-anchor="middle">95</text>
+<path d="M560,264v6" stroke="#64748b"/><text x="560" y="288" text-anchor="middle">100</text>
+<path d="M690,264v6" stroke="#64748b"/><text x="690" y="288" text-anchor="middle">105</text>
+<path d="M820,264v6" stroke="#64748b"/><text x="820" y="288" text-anchor="middle">110</text>
+<path d="M950,264v6" stroke="#64748b"/><text x="950" y="288" text-anchor="middle">115</text>
+<path d="M1080,264v6" stroke="#64748b"/><text x="1080" y="288" text-anchor="middle">120</text>
+<rect x="40" y="322" width="962" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [112, 157)</title></rect>
+<text x="521.0" y="343" text-anchor="middle">P4</text>
+<path d="M40,354v6" stroke="#64748b"/><text x="40" y="378" text-anchor="middle">120</text>
+<path d="M170,354v6" stroke="#64748b"/><text x="170" y="378" text-anchor="middle">125</text>
+<path d="M300,354v6" stroke="#64748b"/><text x="300" y="378" text-anchor="middle">130</text>
+<path d="M430,354v6" stroke="#64748b"/><text x="430" y="378" text-anchor="middle">135</text>
+<path d="M560,354v6" stroke="#64748b"/><text x="560" y="378" text-anchor="middle">140</text>
+<path d="M690,354v6" stroke="#64748b"/><text x="690" y="378" text-anchor="middle">145</text>
+<path d="M820,354v6" stroke="#64748b"/><text x="820" y="378" text-anchor="middle">150</text>
+<path d="M950,354v6" stroke="#64748b"/><text x="950" y="378" text-anchor="middle">155</text>
+<path d="M1002,354v6" stroke="#64748b"/><text x="1002" y="378" text-anchor="middle">157</text>
+<rect x="34" y="409" width="18" height="16" fill="hsl(9, 58%, 76%)"/><text x="58" y="422">P1</text>
+<rect x="153" y="409" width="18" height="16" fill="hsl(218, 58%, 76%)"/><text x="177" y="422">P2</text>
+<rect x="272" y="409" width="18" height="16" fill="hsl(123, 58%, 76%)"/><text x="296" y="422">P3</text>
+<rect x="391" y="409" width="18" height="16" fill="hsl(225, 58%, 76%)"/><text x="415" y="422">P4</text>
+<rect x="510" y="409" width="18" height="16" fill="hsl(142, 58%, 76%)"/><text x="534" y="422">P5</text>
+<rect x="629" y="409" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="653" y="422">P6</text>
+<rect x="748" y="409" width="18" height="16" fill="hsl(240, 58%, 76%)"/><text x="772" y="422">P7</text>
+<rect x="867" y="409" width="18" height="16" fill="hsl(173, 58%, 76%)"/><text x="891" y="422">P8</text>
+<rect x="986" y="409" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="1010" y="422">P9</text>
+<rect x="34" y="436" width="18" height="16" fill="hsl(117, 58%, 76%)"/><text x="58" y="449">P10</text>
+<rect x="153" y="436" width="18" height="16" fill="hsl(261, 58%, 76%)"/><text x="177" y="449">P11</text>
+<rect x="272" y="436" width="18" height="16" fill="hsl(59, 58%, 76%)"/><text x="296" y="449">P12</text>
+<rect x="391" y="436" width="18" height="16" fill="hsl(267, 58%, 76%)"/><text x="415" y="449">P13</text>
+<rect x="510" y="436" width="18" height="16" fill="hsl(79, 58%, 76%)"/><text x="534" y="449">P14</text>
+<rect x="629" y="436" width="18" height="16" fill="hsl(345, 58%, 76%)"/><text x="653" y="449">P15</text>
+<rect x="748" y="436" width="18" height="16" fill="hsl(31, 58%, 76%)"/><text x="772" y="449">P16</text>
+<rect x="867" y="436" width="18" height="16" fill="hsl(101, 58%, 76%)"/><text x="891" y="449">P17</text>
+<rect x="986" y="436" width="18" height="16" fill="hsl(347, 58%, 76%)"/><text x="1010" y="449">P18</text>
+</g></svg><figcaption>SRTF на mixed.txt</figcaption></figure>
+<figure><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="486" viewBox="0 0 1120 486" role="img" aria-label="mixed.txt — PRIORITY">
+<rect width="100%" height="100%" fill="#fff"/>
+<g font-family="Arial,sans-serif" font-size="13" fill="#18283b">
+<text x="24" y="28" font-size="19" font-weight="bold">mixed.txt — PRIORITY</text>
+<rect x="40" y="52" width="78" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [0, 3)</title></rect>
+<text x="79.0" y="73" text-anchor="middle">P1</text>
+<rect x="118" y="52" width="52" height="32" fill="hsl(218, 58%, 76%)" stroke="#fff"><title>P2: [3, 5)</title></rect>
+<text x="144.0" y="73" text-anchor="middle">P2</text>
+<rect x="170" y="52" width="78" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [5, 8)</title></rect>
+<text x="209.0" y="73" text-anchor="middle">P1</text>
+<rect x="248" y="52" width="26" height="32" fill="hsl(142, 58%, 76%)" stroke="#fff"><title>P5: [8, 9)</title></rect>
+<rect x="274" y="52" width="78" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [9, 12)</title></rect>
+<text x="313.0" y="73" text-anchor="middle">P1</text>
+<rect x="352" y="52" width="26" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P6: [12, 13)</title></rect>
+<rect x="378" y="52" width="26" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [13, 14)</title></rect>
+<rect x="404" y="52" width="104" height="32" fill="hsl(240, 58%, 76%)" stroke="#fff"><title>P7: [14, 18)</title></rect>
+<text x="456.0" y="73" text-anchor="middle">P7</text>
+<rect x="508" y="52" width="52" height="32" fill="hsl(173, 58%, 76%)" stroke="#fff"><title>P8: [18, 20)</title></rect>
+<text x="534.0" y="73" text-anchor="middle">P8</text>
+<rect x="560" y="52" width="52" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P9: [20, 22)</title></rect>
+<text x="586.0" y="73" text-anchor="middle">P9</text>
+<rect x="612" y="52" width="78" height="32" fill="hsl(117, 58%, 76%)" stroke="#fff"><title>P10: [22, 25)</title></rect>
+<text x="651.0" y="73" text-anchor="middle">P10</text>
+<rect x="690" y="52" width="52" height="32" fill="hsl(261, 58%, 76%)" stroke="#fff"><title>P11: [25, 27)</title></rect>
+<text x="716.0" y="73" text-anchor="middle">P11</text>
+<rect x="742" y="52" width="26" height="32" fill="hsl(117, 58%, 76%)" stroke="#fff"><title>P10: [27, 28)</title></rect>
+<rect x="768" y="52" width="78" height="32" fill="hsl(59, 58%, 76%)" stroke="#fff"><title>P12: [28, 31)</title></rect>
+<text x="807.0" y="73" text-anchor="middle">P12</text>
+<rect x="846" y="52" width="26" height="32" fill="hsl(267, 58%, 76%)" stroke="#fff"><title>P13: [31, 32)</title></rect>
+<rect x="872" y="52" width="26" height="32" fill="hsl(79, 58%, 76%)" stroke="#fff"><title>P14: [32, 33)</title></rect>
+<rect x="898" y="52" width="104" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [33, 37)</title></rect>
+<text x="950.0" y="73" text-anchor="middle">P1</text>
+<rect x="1002" y="52" width="78" height="32" fill="hsl(345, 58%, 76%)" stroke="#fff"><title>P15: [37, 40)</title></rect>
+<text x="1041.0" y="73" text-anchor="middle">P15</text>
+<path d="M40,84v6" stroke="#64748b"/><text x="40" y="108" text-anchor="middle">0</text>
+<path d="M170,84v6" stroke="#64748b"/><text x="170" y="108" text-anchor="middle">5</text>
+<path d="M300,84v6" stroke="#64748b"/><text x="300" y="108" text-anchor="middle">10</text>
+<path d="M430,84v6" stroke="#64748b"/><text x="430" y="108" text-anchor="middle">15</text>
+<path d="M560,84v6" stroke="#64748b"/><text x="560" y="108" text-anchor="middle">20</text>
+<path d="M690,84v6" stroke="#64748b"/><text x="690" y="108" text-anchor="middle">25</text>
+<path d="M820,84v6" stroke="#64748b"/><text x="820" y="108" text-anchor="middle">30</text>
+<path d="M950,84v6" stroke="#64748b"/><text x="950" y="108" text-anchor="middle">35</text>
+<path d="M1080,84v6" stroke="#64748b"/><text x="1080" y="108" text-anchor="middle">40</text>
+<rect x="40" y="142" width="26" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [40, 41)</title></rect>
+<rect x="66" y="142" width="104" height="32" fill="hsl(31, 58%, 76%)" stroke="#fff"><title>P16: [41, 45)</title></rect>
+<text x="118.0" y="163" text-anchor="middle">P16</text>
+<rect x="170" y="142" width="78" height="32" fill="hsl(101, 58%, 76%)" stroke="#fff"><title>P17: [45, 48)</title></rect>
+<text x="209.0" y="163" text-anchor="middle">P17</text>
+<rect x="248" y="142" width="104" height="32" fill="hsl(347, 58%, 76%)" stroke="#fff"><title>P18: [48, 52)</title></rect>
+<text x="300.0" y="163" text-anchor="middle">P18</text>
+<rect x="352" y="142" width="650" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [52, 77)</title></rect>
+<text x="677.0" y="163" text-anchor="middle">P1</text>
+<rect x="1002" y="142" width="78" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [77, 122)</title></rect>
+<text x="1041.0" y="163" text-anchor="middle">P4</text>
+<path d="M40,174v6" stroke="#64748b"/><text x="40" y="198" text-anchor="middle">40</text>
+<path d="M170,174v6" stroke="#64748b"/><text x="170" y="198" text-anchor="middle">45</text>
+<path d="M300,174v6" stroke="#64748b"/><text x="300" y="198" text-anchor="middle">50</text>
+<path d="M430,174v6" stroke="#64748b"/><text x="430" y="198" text-anchor="middle">55</text>
+<path d="M560,174v6" stroke="#64748b"/><text x="560" y="198" text-anchor="middle">60</text>
+<path d="M690,174v6" stroke="#64748b"/><text x="690" y="198" text-anchor="middle">65</text>
+<path d="M820,174v6" stroke="#64748b"/><text x="820" y="198" text-anchor="middle">70</text>
+<path d="M950,174v6" stroke="#64748b"/><text x="950" y="198" text-anchor="middle">75</text>
+<path d="M1080,174v6" stroke="#64748b"/><text x="1080" y="198" text-anchor="middle">80</text>
+<rect x="40" y="232" width="1040" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [77, 122)</title></rect>
+<text x="560.0" y="253" text-anchor="middle">P4</text>
+<path d="M40,264v6" stroke="#64748b"/><text x="40" y="288" text-anchor="middle">80</text>
+<path d="M170,264v6" stroke="#64748b"/><text x="170" y="288" text-anchor="middle">85</text>
+<path d="M300,264v6" stroke="#64748b"/><text x="300" y="288" text-anchor="middle">90</text>
+<path d="M430,264v6" stroke="#64748b"/><text x="430" y="288" text-anchor="middle">95</text>
+<path d="M560,264v6" stroke="#64748b"/><text x="560" y="288" text-anchor="middle">100</text>
+<path d="M690,264v6" stroke="#64748b"/><text x="690" y="288" text-anchor="middle">105</text>
+<path d="M820,264v6" stroke="#64748b"/><text x="820" y="288" text-anchor="middle">110</text>
+<path d="M950,264v6" stroke="#64748b"/><text x="950" y="288" text-anchor="middle">115</text>
+<path d="M1080,264v6" stroke="#64748b"/><text x="1080" y="288" text-anchor="middle">120</text>
+<rect x="40" y="322" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [77, 122)</title></rect>
+<text x="66.0" y="343" text-anchor="middle">P4</text>
+<rect x="92" y="322" width="910" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [122, 157)</title></rect>
+<text x="547.0" y="343" text-anchor="middle">P3</text>
+<path d="M40,354v6" stroke="#64748b"/><text x="40" y="378" text-anchor="middle">120</text>
+<path d="M170,354v6" stroke="#64748b"/><text x="170" y="378" text-anchor="middle">125</text>
+<path d="M300,354v6" stroke="#64748b"/><text x="300" y="378" text-anchor="middle">130</text>
+<path d="M430,354v6" stroke="#64748b"/><text x="430" y="378" text-anchor="middle">135</text>
+<path d="M560,354v6" stroke="#64748b"/><text x="560" y="378" text-anchor="middle">140</text>
+<path d="M690,354v6" stroke="#64748b"/><text x="690" y="378" text-anchor="middle">145</text>
+<path d="M820,354v6" stroke="#64748b"/><text x="820" y="378" text-anchor="middle">150</text>
+<path d="M950,354v6" stroke="#64748b"/><text x="950" y="378" text-anchor="middle">155</text>
+<path d="M1002,354v6" stroke="#64748b"/><text x="1002" y="378" text-anchor="middle">157</text>
+<rect x="34" y="409" width="18" height="16" fill="hsl(9, 58%, 76%)"/><text x="58" y="422">P1</text>
+<rect x="153" y="409" width="18" height="16" fill="hsl(218, 58%, 76%)"/><text x="177" y="422">P2</text>
+<rect x="272" y="409" width="18" height="16" fill="hsl(123, 58%, 76%)"/><text x="296" y="422">P3</text>
+<rect x="391" y="409" width="18" height="16" fill="hsl(225, 58%, 76%)"/><text x="415" y="422">P4</text>
+<rect x="510" y="409" width="18" height="16" fill="hsl(142, 58%, 76%)"/><text x="534" y="422">P5</text>
+<rect x="629" y="409" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="653" y="422">P6</text>
+<rect x="748" y="409" width="18" height="16" fill="hsl(240, 58%, 76%)"/><text x="772" y="422">P7</text>
+<rect x="867" y="409" width="18" height="16" fill="hsl(173, 58%, 76%)"/><text x="891" y="422">P8</text>
+<rect x="986" y="409" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="1010" y="422">P9</text>
+<rect x="34" y="436" width="18" height="16" fill="hsl(117, 58%, 76%)"/><text x="58" y="449">P10</text>
+<rect x="153" y="436" width="18" height="16" fill="hsl(261, 58%, 76%)"/><text x="177" y="449">P11</text>
+<rect x="272" y="436" width="18" height="16" fill="hsl(59, 58%, 76%)"/><text x="296" y="449">P12</text>
+<rect x="391" y="436" width="18" height="16" fill="hsl(267, 58%, 76%)"/><text x="415" y="449">P13</text>
+<rect x="510" y="436" width="18" height="16" fill="hsl(79, 58%, 76%)"/><text x="534" y="449">P14</text>
+<rect x="629" y="436" width="18" height="16" fill="hsl(345, 58%, 76%)"/><text x="653" y="449">P15</text>
+<rect x="748" y="436" width="18" height="16" fill="hsl(31, 58%, 76%)"/><text x="772" y="449">P16</text>
+<rect x="867" y="436" width="18" height="16" fill="hsl(101, 58%, 76%)"/><text x="891" y="449">P17</text>
+<rect x="986" y="436" width="18" height="16" fill="hsl(347, 58%, 76%)"/><text x="1010" y="449">P18</text>
+</g></svg><figcaption>PRIORITY на mixed.txt</figcaption></figure>
+<h2>В. Продвинутый блок</h2>
+<h3>В1–В2. Голодание P1 и старение приоритета</h3>
+<p>Без старения P1 имеет приоритет 9 и уступает всем остальным процессам. Его первое выполнение — t=57, завершение — t=63; ожидание 57. Поток в файле конечный, поэтому это длительное откладывание, демонстрирующее механизм голодания, а не бесконечное ожидание. При непрерывном поступлении задач с более высоким приоритетом ожидание могло бы стать неограниченным.</p>
+<p>Старение: effective_priority = base_priority − floor(total_ready_wait / 3), где total_ready_wait = t − arrival − executed. Учитывается только накопленное ожидание, включая паузы после вытеснения; работающий процесс не накапливает ожидание и сохраняет полученное улучшение. Снизу приоритет не ограничен. При строгом улучшении ключа возможны вытеснения; при равенстве текущий процесс продолжает работу.</p>
+<div class="table-wrap"><table><thead><tr><th>Вариант</th><th>Старт P1</th><th>Конец P1</th><th>Ожидание P1</th><th>Оборот P1</th><th>Отклик P1</th></tr></thead><tbody><tr><td>Priority</td><td>57</td><td>63</td><td>57</td><td>63</td><td>57</td></tr><tr><td>Priority + aging/3</td><td>21</td><td>27</td><td>21</td><td>27</td><td>21</td></tr></tbody></table></div>
+<p>Со старением P1 запускается на 36 единиц раньше и завершается на 36 единиц раньше. Все 20 процессов завершаются в обоих вариантах.</p>
+<div class="table-wrap"><table><thead><tr><th>Алгоритм</th><th>Среднее ожидание</th><th>Средний оборот</th><th>Средний отклик</th><th>Переключения</th></tr></thead><tbody><tr><td>PRIORITY</td><td>2.85</td><td>6.00</td><td>2.85</td><td>19</td></tr><tr><td>PRIORITY aging=3</td><td>4.65</td><td>7.80</td><td>4.65</td><td>19</td></tr></tbody></table></div>
+<figure><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="333" viewBox="0 0 1120 333" role="img" aria-label="starve.txt — Priority">
+<rect width="100%" height="100%" fill="#fff"/>
+<g font-family="Arial,sans-serif" font-size="13" fill="#18283b">
+<text x="24" y="28" font-size="19" font-weight="bold">starve.txt — Priority</text>
+<rect x="40" y="52" width="78" height="32" fill="hsl(218, 58%, 76%)" stroke="#fff"><title>P2: [0, 3)</title></rect>
+<text x="79.0" y="73" text-anchor="middle">P2</text>
+<rect x="118" y="52" width="78" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [3, 6)</title></rect>
+<text x="157.0" y="73" text-anchor="middle">P3</text>
+<rect x="196" y="52" width="78" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [6, 9)</title></rect>
+<text x="235.0" y="73" text-anchor="middle">P4</text>
+<rect x="274" y="52" width="78" height="32" fill="hsl(142, 58%, 76%)" stroke="#fff"><title>P5: [9, 12)</title></rect>
+<text x="313.0" y="73" text-anchor="middle">P5</text>
+<rect x="352" y="52" width="78" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P6: [12, 15)</title></rect>
+<text x="391.0" y="73" text-anchor="middle">P6</text>
+<rect x="430" y="52" width="78" height="32" fill="hsl(240, 58%, 76%)" stroke="#fff"><title>P7: [15, 18)</title></rect>
+<text x="469.0" y="73" text-anchor="middle">P7</text>
+<rect x="508" y="52" width="78" height="32" fill="hsl(173, 58%, 76%)" stroke="#fff"><title>P8: [18, 21)</title></rect>
+<text x="547.0" y="73" text-anchor="middle">P8</text>
+<rect x="586" y="52" width="78" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P9: [21, 24)</title></rect>
+<text x="625.0" y="73" text-anchor="middle">P9</text>
+<rect x="664" y="52" width="78" height="32" fill="hsl(117, 58%, 76%)" stroke="#fff"><title>P10: [24, 27)</title></rect>
+<text x="703.0" y="73" text-anchor="middle">P10</text>
+<rect x="742" y="52" width="78" height="32" fill="hsl(261, 58%, 76%)" stroke="#fff"><title>P11: [27, 30)</title></rect>
+<text x="781.0" y="73" text-anchor="middle">P11</text>
+<rect x="820" y="52" width="78" height="32" fill="hsl(59, 58%, 76%)" stroke="#fff"><title>P12: [30, 33)</title></rect>
+<text x="859.0" y="73" text-anchor="middle">P12</text>
+<rect x="898" y="52" width="78" height="32" fill="hsl(267, 58%, 76%)" stroke="#fff"><title>P13: [33, 36)</title></rect>
+<text x="937.0" y="73" text-anchor="middle">P13</text>
+<rect x="976" y="52" width="78" height="32" fill="hsl(79, 58%, 76%)" stroke="#fff"><title>P14: [36, 39)</title></rect>
+<text x="1015.0" y="73" text-anchor="middle">P14</text>
+<rect x="1054" y="52" width="26" height="32" fill="hsl(345, 58%, 76%)" stroke="#fff"><title>P15: [39, 42)</title></rect>
+<path d="M40,84v6" stroke="#64748b"/><text x="40" y="108" text-anchor="middle">0</text>
+<path d="M170,84v6" stroke="#64748b"/><text x="170" y="108" text-anchor="middle">5</text>
+<path d="M300,84v6" stroke="#64748b"/><text x="300" y="108" text-anchor="middle">10</text>
+<path d="M430,84v6" stroke="#64748b"/><text x="430" y="108" text-anchor="middle">15</text>
+<path d="M560,84v6" stroke="#64748b"/><text x="560" y="108" text-anchor="middle">20</text>
+<path d="M690,84v6" stroke="#64748b"/><text x="690" y="108" text-anchor="middle">25</text>
+<path d="M820,84v6" stroke="#64748b"/><text x="820" y="108" text-anchor="middle">30</text>
+<path d="M950,84v6" stroke="#64748b"/><text x="950" y="108" text-anchor="middle">35</text>
+<path d="M1080,84v6" stroke="#64748b"/><text x="1080" y="108" text-anchor="middle">40</text>
+<rect x="40" y="142" width="52" height="32" fill="hsl(345, 58%, 76%)" stroke="#fff"><title>P15: [39, 42)</title></rect>
+<text x="66.0" y="163" text-anchor="middle">P15</text>
+<rect x="92" y="142" width="78" height="32" fill="hsl(31, 58%, 76%)" stroke="#fff"><title>P16: [42, 45)</title></rect>
+<text x="131.0" y="163" text-anchor="middle">P16</text>
+<rect x="170" y="142" width="78" height="32" fill="hsl(101, 58%, 76%)" stroke="#fff"><title>P17: [45, 48)</title></rect>
+<text x="209.0" y="163" text-anchor="middle">P17</text>
+<rect x="248" y="142" width="78" height="32" fill="hsl(347, 58%, 76%)" stroke="#fff"><title>P18: [48, 51)</title></rect>
+<text x="287.0" y="163" text-anchor="middle">P18</text>
+<rect x="326" y="142" width="78" height="32" fill="hsl(338, 58%, 76%)" stroke="#fff"><title>P19: [51, 54)</title></rect>
+<text x="365.0" y="163" text-anchor="middle">P19</text>
+<rect x="404" y="142" width="78" height="32" fill="hsl(201, 58%, 76%)" stroke="#fff"><title>P20: [54, 57)</title></rect>
+<text x="443.0" y="163" text-anchor="middle">P20</text>
+<rect x="482" y="142" width="156" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [57, 63)</title></rect>
+<text x="560.0" y="163" text-anchor="middle">P1</text>
+<path d="M40,174v6" stroke="#64748b"/><text x="40" y="198" text-anchor="middle">40</text>
+<path d="M170,174v6" stroke="#64748b"/><text x="170" y="198" text-anchor="middle">45</text>
+<path d="M300,174v6" stroke="#64748b"/><text x="300" y="198" text-anchor="middle">50</text>
+<path d="M430,174v6" stroke="#64748b"/><text x="430" y="198" text-anchor="middle">55</text>
+<path d="M560,174v6" stroke="#64748b"/><text x="560" y="198" text-anchor="middle">60</text>
+<path d="M638,174v6" stroke="#64748b"/><text x="638" y="198" text-anchor="middle">63</text>
+<rect x="34" y="229" width="18" height="16" fill="hsl(9, 58%, 76%)"/><text x="58" y="242">P1</text>
+<rect x="153" y="229" width="18" height="16" fill="hsl(218, 58%, 76%)"/><text x="177" y="242">P2</text>
+<rect x="272" y="229" width="18" height="16" fill="hsl(123, 58%, 76%)"/><text x="296" y="242">P3</text>
+<rect x="391" y="229" width="18" height="16" fill="hsl(225, 58%, 76%)"/><text x="415" y="242">P4</text>
+<rect x="510" y="229" width="18" height="16" fill="hsl(142, 58%, 76%)"/><text x="534" y="242">P5</text>
+<rect x="629" y="229" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="653" y="242">P6</text>
+<rect x="748" y="229" width="18" height="16" fill="hsl(240, 58%, 76%)"/><text x="772" y="242">P7</text>
+<rect x="867" y="229" width="18" height="16" fill="hsl(173, 58%, 76%)"/><text x="891" y="242">P8</text>
+<rect x="986" y="229" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="1010" y="242">P9</text>
+<rect x="34" y="256" width="18" height="16" fill="hsl(117, 58%, 76%)"/><text x="58" y="269">P10</text>
+<rect x="153" y="256" width="18" height="16" fill="hsl(261, 58%, 76%)"/><text x="177" y="269">P11</text>
+<rect x="272" y="256" width="18" height="16" fill="hsl(59, 58%, 76%)"/><text x="296" y="269">P12</text>
+<rect x="391" y="256" width="18" height="16" fill="hsl(267, 58%, 76%)"/><text x="415" y="269">P13</text>
+<rect x="510" y="256" width="18" height="16" fill="hsl(79, 58%, 76%)"/><text x="534" y="269">P14</text>
+<rect x="629" y="256" width="18" height="16" fill="hsl(345, 58%, 76%)"/><text x="653" y="269">P15</text>
+<rect x="748" y="256" width="18" height="16" fill="hsl(31, 58%, 76%)"/><text x="772" y="269">P16</text>
+<rect x="867" y="256" width="18" height="16" fill="hsl(101, 58%, 76%)"/><text x="891" y="269">P17</text>
+<rect x="986" y="256" width="18" height="16" fill="hsl(347, 58%, 76%)"/><text x="1010" y="269">P18</text>
+<rect x="34" y="283" width="18" height="16" fill="hsl(338, 58%, 76%)"/><text x="58" y="296">P19</text>
+<rect x="153" y="283" width="18" height="16" fill="hsl(201, 58%, 76%)"/><text x="177" y="296">P20</text>
+</g></svg><figcaption>Priority без старения</figcaption></figure>
+<figure><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="333" viewBox="0 0 1120 333" role="img" aria-label="starve.txt — PRIORITY aging=3">
+<rect width="100%" height="100%" fill="#fff"/>
+<g font-family="Arial,sans-serif" font-size="13" fill="#18283b">
+<text x="24" y="28" font-size="19" font-weight="bold">starve.txt — PRIORITY aging=3</text>
+<rect x="40" y="52" width="78" height="32" fill="hsl(218, 58%, 76%)" stroke="#fff"><title>P2: [0, 3)</title></rect>
+<text x="79.0" y="73" text-anchor="middle">P2</text>
+<rect x="118" y="52" width="78" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [3, 6)</title></rect>
+<text x="157.0" y="73" text-anchor="middle">P3</text>
+<rect x="196" y="52" width="78" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [6, 9)</title></rect>
+<text x="235.0" y="73" text-anchor="middle">P4</text>
+<rect x="274" y="52" width="78" height="32" fill="hsl(142, 58%, 76%)" stroke="#fff"><title>P5: [9, 12)</title></rect>
+<text x="313.0" y="73" text-anchor="middle">P5</text>
+<rect x="352" y="52" width="78" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P6: [12, 15)</title></rect>
+<text x="391.0" y="73" text-anchor="middle">P6</text>
+<rect x="430" y="52" width="78" height="32" fill="hsl(240, 58%, 76%)" stroke="#fff"><title>P7: [15, 18)</title></rect>
+<text x="469.0" y="73" text-anchor="middle">P7</text>
+<rect x="508" y="52" width="78" height="32" fill="hsl(173, 58%, 76%)" stroke="#fff"><title>P8: [18, 21)</title></rect>
+<text x="547.0" y="73" text-anchor="middle">P8</text>
+<rect x="586" y="52" width="156" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [21, 27)</title></rect>
+<text x="664.0" y="73" text-anchor="middle">P1</text>
+<rect x="742" y="52" width="78" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P9: [27, 30)</title></rect>
+<text x="781.0" y="73" text-anchor="middle">P9</text>
+<rect x="820" y="52" width="78" height="32" fill="hsl(117, 58%, 76%)" stroke="#fff"><title>P10: [30, 33)</title></rect>
+<text x="859.0" y="73" text-anchor="middle">P10</text>
+<rect x="898" y="52" width="78" height="32" fill="hsl(59, 58%, 76%)" stroke="#fff"><title>P12: [33, 36)</title></rect>
+<text x="937.0" y="73" text-anchor="middle">P12</text>
+<rect x="976" y="52" width="78" height="32" fill="hsl(261, 58%, 76%)" stroke="#fff"><title>P11: [36, 39)</title></rect>
+<text x="1015.0" y="73" text-anchor="middle">P11</text>
+<rect x="1054" y="52" width="26" height="32" fill="hsl(267, 58%, 76%)" stroke="#fff"><title>P13: [39, 42)</title></rect>
+<path d="M40,84v6" stroke="#64748b"/><text x="40" y="108" text-anchor="middle">0</text>
+<path d="M170,84v6" stroke="#64748b"/><text x="170" y="108" text-anchor="middle">5</text>
+<path d="M300,84v6" stroke="#64748b"/><text x="300" y="108" text-anchor="middle">10</text>
+<path d="M430,84v6" stroke="#64748b"/><text x="430" y="108" text-anchor="middle">15</text>
+<path d="M560,84v6" stroke="#64748b"/><text x="560" y="108" text-anchor="middle">20</text>
+<path d="M690,84v6" stroke="#64748b"/><text x="690" y="108" text-anchor="middle">25</text>
+<path d="M820,84v6" stroke="#64748b"/><text x="820" y="108" text-anchor="middle">30</text>
+<path d="M950,84v6" stroke="#64748b"/><text x="950" y="108" text-anchor="middle">35</text>
+<path d="M1080,84v6" stroke="#64748b"/><text x="1080" y="108" text-anchor="middle">40</text>
+<rect x="40" y="142" width="52" height="32" fill="hsl(267, 58%, 76%)" stroke="#fff"><title>P13: [39, 42)</title></rect>
+<text x="66.0" y="163" text-anchor="middle">P13</text>
+<rect x="92" y="142" width="78" height="32" fill="hsl(79, 58%, 76%)" stroke="#fff"><title>P14: [42, 45)</title></rect>
+<text x="131.0" y="163" text-anchor="middle">P14</text>
+<rect x="170" y="142" width="78" height="32" fill="hsl(345, 58%, 76%)" stroke="#fff"><title>P15: [45, 48)</title></rect>
+<text x="209.0" y="163" text-anchor="middle">P15</text>
+<rect x="248" y="142" width="78" height="32" fill="hsl(31, 58%, 76%)" stroke="#fff"><title>P16: [48, 51)</title></rect>
+<text x="287.0" y="163" text-anchor="middle">P16</text>
+<rect x="326" y="142" width="78" height="32" fill="hsl(347, 58%, 76%)" stroke="#fff"><title>P18: [51, 54)</title></rect>
+<text x="365.0" y="163" text-anchor="middle">P18</text>
+<rect x="404" y="142" width="78" height="32" fill="hsl(101, 58%, 76%)" stroke="#fff"><title>P17: [54, 57)</title></rect>
+<text x="443.0" y="163" text-anchor="middle">P17</text>
+<rect x="482" y="142" width="78" height="32" fill="hsl(338, 58%, 76%)" stroke="#fff"><title>P19: [57, 60)</title></rect>
+<text x="521.0" y="163" text-anchor="middle">P19</text>
+<rect x="560" y="142" width="78" height="32" fill="hsl(201, 58%, 76%)" stroke="#fff"><title>P20: [60, 63)</title></rect>
+<text x="599.0" y="163" text-anchor="middle">P20</text>
+<path d="M40,174v6" stroke="#64748b"/><text x="40" y="198" text-anchor="middle">40</text>
+<path d="M170,174v6" stroke="#64748b"/><text x="170" y="198" text-anchor="middle">45</text>
+<path d="M300,174v6" stroke="#64748b"/><text x="300" y="198" text-anchor="middle">50</text>
+<path d="M430,174v6" stroke="#64748b"/><text x="430" y="198" text-anchor="middle">55</text>
+<path d="M560,174v6" stroke="#64748b"/><text x="560" y="198" text-anchor="middle">60</text>
+<path d="M638,174v6" stroke="#64748b"/><text x="638" y="198" text-anchor="middle">63</text>
+<rect x="34" y="229" width="18" height="16" fill="hsl(9, 58%, 76%)"/><text x="58" y="242">P1</text>
+<rect x="153" y="229" width="18" height="16" fill="hsl(218, 58%, 76%)"/><text x="177" y="242">P2</text>
+<rect x="272" y="229" width="18" height="16" fill="hsl(123, 58%, 76%)"/><text x="296" y="242">P3</text>
+<rect x="391" y="229" width="18" height="16" fill="hsl(225, 58%, 76%)"/><text x="415" y="242">P4</text>
+<rect x="510" y="229" width="18" height="16" fill="hsl(142, 58%, 76%)"/><text x="534" y="242">P5</text>
+<rect x="629" y="229" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="653" y="242">P6</text>
+<rect x="748" y="229" width="18" height="16" fill="hsl(240, 58%, 76%)"/><text x="772" y="242">P7</text>
+<rect x="867" y="229" width="18" height="16" fill="hsl(173, 58%, 76%)"/><text x="891" y="242">P8</text>
+<rect x="986" y="229" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="1010" y="242">P9</text>
+<rect x="34" y="256" width="18" height="16" fill="hsl(117, 58%, 76%)"/><text x="58" y="269">P10</text>
+<rect x="153" y="256" width="18" height="16" fill="hsl(261, 58%, 76%)"/><text x="177" y="269">P11</text>
+<rect x="272" y="256" width="18" height="16" fill="hsl(59, 58%, 76%)"/><text x="296" y="269">P12</text>
+<rect x="391" y="256" width="18" height="16" fill="hsl(267, 58%, 76%)"/><text x="415" y="269">P13</text>
+<rect x="510" y="256" width="18" height="16" fill="hsl(79, 58%, 76%)"/><text x="534" y="269">P14</text>
+<rect x="629" y="256" width="18" height="16" fill="hsl(345, 58%, 76%)"/><text x="653" y="269">P15</text>
+<rect x="748" y="256" width="18" height="16" fill="hsl(31, 58%, 76%)"/><text x="772" y="269">P16</text>
+<rect x="867" y="256" width="18" height="16" fill="hsl(101, 58%, 76%)"/><text x="891" y="269">P17</text>
+<rect x="986" y="256" width="18" height="16" fill="hsl(347, 58%, 76%)"/><text x="1010" y="269">P18</text>
+<rect x="34" y="283" width="18" height="16" fill="hsl(338, 58%, 76%)"/><text x="58" y="296">P19</text>
+<rect x="153" y="283" width="18" height="16" fill="hsl(201, 58%, 76%)"/><text x="177" y="296">P20</text>
+</g></svg><figcaption>Priority со старением</figcaption></figure>
+<h3>В3. MLFQ: три уровня и периодический boost</h3>
+<p>Используются очереди Q0, Q1, Q2, кванты 2, 4, 8. Новая задача поступает в Q0. Выбирается самая высокая непустая очередь, внутри — FIFO. Исчерпание кванта понижает задачу на один уровень; из Q2 она возвращается в Q2. Поступление в более высокую очередь вытесняет задачу, сохраняя остаток её кванта и место в начале своей очереди.</p>
+<p>Каждые 20 единиц времени все незавершённые поступившие задачи поднимаются в Q0, бюджеты квантов сбрасываются. Работающая задача продолжает свой ход и получает новый квант Q0; ожидающие упорядочиваются по прежним уровням сверху вниз и FIFO внутри уровня. В точке события порядок такой: поступления, возврат после кванта, boost, выбор процесса. Эта конкретизация устраняет неоднозначности при одновременных событиях.</p>
+<div class="table-wrap"><table><thead><tr><th>Алгоритм</th><th>Среднее ожидание</th><th>Средний оборот</th><th>Средний отклик</th><th>Переключения</th></tr></thead><tbody><tr><td>SRTF</td><td>12.28</td><td>21.00</td><td>6.33</td><td>23</td></tr><tr><td>RR q=2</td><td>30.83</td><td>39.56</td><td>8.61</td><td>76</td></tr><tr><td>MLFQ q=2,4,8 boost=20</td><td>24.89</td><td>33.61</td><td>3.50</td><td>62</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Алгоритм</th><th>Отклик коротких</th><th>Максимальный отклик</th><th>Последнее завершение длинных</th></tr></thead><tbody><tr><td>SRTF</td><td>0.47</td><td>105</td><td>157</td></tr><tr><td>RR q=2</td><td>9.93</td><td>14</td><td>157</td></tr><tr><td>MLFQ q=2,4,8 boost=20</td><td>4.07</td><td>10</td><td>157</td></tr></tbody></table></div>
+<figure><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="486" viewBox="0 0 1120 486" role="img" aria-label="mixed.txt — MLFQ q=2,4,8 boost=20">
+<rect width="100%" height="100%" fill="#fff"/>
+<g font-family="Arial,sans-serif" font-size="13" fill="#18283b">
+<text x="24" y="28" font-size="19" font-weight="bold">mixed.txt — MLFQ q=2,4,8 boost=20</text>
+<rect x="40" y="52" width="78" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [0, 3)</title></rect>
+<text x="79.0" y="73" text-anchor="middle">P1</text>
+<rect x="118" y="52" width="52" height="32" fill="hsl(218, 58%, 76%)" stroke="#fff"><title>P2: [3, 5)</title></rect>
+<text x="144.0" y="73" text-anchor="middle">P2</text>
+<rect x="170" y="52" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [5, 7)</title></rect>
+<text x="196.0" y="73" text-anchor="middle">P3</text>
+<rect x="222" y="52" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [7, 9)</title></rect>
+<text x="248.0" y="73" text-anchor="middle">P4</text>
+<rect x="274" y="52" width="26" height="32" fill="hsl(142, 58%, 76%)" stroke="#fff"><title>P5: [9, 10)</title></rect>
+<rect x="300" y="52" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [10, 12)</title></rect>
+<text x="326.0" y="73" text-anchor="middle">P1</text>
+<rect x="352" y="52" width="26" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P6: [12, 13)</title></rect>
+<rect x="378" y="52" width="26" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [13, 14)</title></rect>
+<rect x="404" y="52" width="52" height="32" fill="hsl(240, 58%, 76%)" stroke="#fff"><title>P7: [14, 16)</title></rect>
+<text x="430.0" y="73" text-anchor="middle">P7</text>
+<rect x="456" y="52" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [16, 18)</title></rect>
+<text x="482.0" y="73" text-anchor="middle">P3</text>
+<rect x="508" y="52" width="52" height="32" fill="hsl(173, 58%, 76%)" stroke="#fff"><title>P8: [18, 20)</title></rect>
+<text x="534.0" y="73" text-anchor="middle">P8</text>
+<rect x="560" y="52" width="52" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P9: [20, 22)</title></rect>
+<text x="586.0" y="73" text-anchor="middle">P9</text>
+<rect x="612" y="52" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [22, 24)</title></rect>
+<text x="638.0" y="73" text-anchor="middle">P3</text>
+<rect x="664" y="52" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [24, 26)</title></rect>
+<text x="690.0" y="73" text-anchor="middle">P4</text>
+<rect x="716" y="52" width="52" height="32" fill="hsl(240, 58%, 76%)" stroke="#fff"><title>P7: [26, 28)</title></rect>
+<text x="742.0" y="73" text-anchor="middle">P7</text>
+<rect x="768" y="52" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [28, 30)</title></rect>
+<text x="794.0" y="73" text-anchor="middle">P1</text>
+<rect x="820" y="52" width="52" height="32" fill="hsl(117, 58%, 76%)" stroke="#fff"><title>P10: [30, 32)</title></rect>
+<text x="846.0" y="73" text-anchor="middle">P10</text>
+<rect x="872" y="52" width="52" height="32" fill="hsl(261, 58%, 76%)" stroke="#fff"><title>P11: [32, 34)</title></rect>
+<text x="898.0" y="73" text-anchor="middle">P11</text>
+<rect x="924" y="52" width="52" height="32" fill="hsl(59, 58%, 76%)" stroke="#fff"><title>P12: [34, 36)</title></rect>
+<text x="950.0" y="73" text-anchor="middle">P12</text>
+<rect x="976" y="52" width="26" height="32" fill="hsl(267, 58%, 76%)" stroke="#fff"><title>P13: [36, 37)</title></rect>
+<rect x="1002" y="52" width="26" height="32" fill="hsl(79, 58%, 76%)" stroke="#fff"><title>P14: [37, 38)</title></rect>
+<rect x="1028" y="52" width="52" height="32" fill="hsl(345, 58%, 76%)" stroke="#fff"><title>P15: [38, 40)</title></rect>
+<text x="1054.0" y="73" text-anchor="middle">P15</text>
+<path d="M40,84v6" stroke="#64748b"/><text x="40" y="108" text-anchor="middle">0</text>
+<path d="M170,84v6" stroke="#64748b"/><text x="170" y="108" text-anchor="middle">5</text>
+<path d="M300,84v6" stroke="#64748b"/><text x="300" y="108" text-anchor="middle">10</text>
+<path d="M430,84v6" stroke="#64748b"/><text x="430" y="108" text-anchor="middle">15</text>
+<path d="M560,84v6" stroke="#64748b"/><text x="560" y="108" text-anchor="middle">20</text>
+<path d="M690,84v6" stroke="#64748b"/><text x="690" y="108" text-anchor="middle">25</text>
+<path d="M820,84v6" stroke="#64748b"/><text x="820" y="108" text-anchor="middle">30</text>
+<path d="M950,84v6" stroke="#64748b"/><text x="950" y="108" text-anchor="middle">35</text>
+<path d="M1080,84v6" stroke="#64748b"/><text x="1080" y="108" text-anchor="middle">40</text>
+<rect x="40" y="142" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [40, 42)</title></rect>
+<text x="66.0" y="163" text-anchor="middle">P3</text>
+<rect x="92" y="142" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [42, 44)</title></rect>
+<text x="118.0" y="163" text-anchor="middle">P4</text>
+<rect x="144" y="142" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [44, 46)</title></rect>
+<text x="170.0" y="163" text-anchor="middle">P1</text>
+<rect x="196" y="142" width="52" height="32" fill="hsl(117, 58%, 76%)" stroke="#fff"><title>P10: [46, 48)</title></rect>
+<text x="222.0" y="163" text-anchor="middle">P10</text>
+<rect x="248" y="142" width="26" height="32" fill="hsl(59, 58%, 76%)" stroke="#fff"><title>P12: [48, 49)</title></rect>
+<rect x="274" y="142" width="26" height="32" fill="hsl(345, 58%, 76%)" stroke="#fff"><title>P15: [49, 50)</title></rect>
+<rect x="300" y="142" width="52" height="32" fill="hsl(31, 58%, 76%)" stroke="#fff"><title>P16: [50, 52)</title></rect>
+<text x="326.0" y="163" text-anchor="middle">P16</text>
+<rect x="352" y="142" width="52" height="32" fill="hsl(101, 58%, 76%)" stroke="#fff"><title>P17: [52, 54)</title></rect>
+<text x="378.0" y="163" text-anchor="middle">P17</text>
+<rect x="404" y="142" width="52" height="32" fill="hsl(347, 58%, 76%)" stroke="#fff"><title>P18: [54, 56)</title></rect>
+<text x="430.0" y="163" text-anchor="middle">P18</text>
+<rect x="456" y="142" width="104" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [56, 60)</title></rect>
+<text x="508.0" y="163" text-anchor="middle">P3</text>
+<rect x="560" y="142" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [60, 62)</title></rect>
+<text x="586.0" y="163" text-anchor="middle">P4</text>
+<rect x="612" y="142" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [62, 64)</title></rect>
+<text x="638.0" y="163" text-anchor="middle">P1</text>
+<rect x="664" y="142" width="52" height="32" fill="hsl(31, 58%, 76%)" stroke="#fff"><title>P16: [64, 66)</title></rect>
+<text x="690.0" y="163" text-anchor="middle">P16</text>
+<rect x="716" y="142" width="26" height="32" fill="hsl(101, 58%, 76%)" stroke="#fff"><title>P17: [66, 67)</title></rect>
+<rect x="742" y="142" width="52" height="32" fill="hsl(347, 58%, 76%)" stroke="#fff"><title>P18: [67, 69)</title></rect>
+<text x="768.0" y="163" text-anchor="middle">P18</text>
+<rect x="794" y="142" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [69, 71)</title></rect>
+<text x="820.0" y="163" text-anchor="middle">P3</text>
+<rect x="846" y="142" width="104" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [71, 75)</title></rect>
+<text x="898.0" y="163" text-anchor="middle">P4</text>
+<rect x="950" y="142" width="104" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [75, 79)</title></rect>
+<text x="1002.0" y="163" text-anchor="middle">P1</text>
+<rect x="1054" y="142" width="26" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [79, 82)</title></rect>
+<path d="M40,174v6" stroke="#64748b"/><text x="40" y="198" text-anchor="middle">40</text>
+<path d="M170,174v6" stroke="#64748b"/><text x="170" y="198" text-anchor="middle">45</text>
+<path d="M300,174v6" stroke="#64748b"/><text x="300" y="198" text-anchor="middle">50</text>
+<path d="M430,174v6" stroke="#64748b"/><text x="430" y="198" text-anchor="middle">55</text>
+<path d="M560,174v6" stroke="#64748b"/><text x="560" y="198" text-anchor="middle">60</text>
+<path d="M690,174v6" stroke="#64748b"/><text x="690" y="198" text-anchor="middle">65</text>
+<path d="M820,174v6" stroke="#64748b"/><text x="820" y="198" text-anchor="middle">70</text>
+<path d="M950,174v6" stroke="#64748b"/><text x="950" y="198" text-anchor="middle">75</text>
+<path d="M1080,174v6" stroke="#64748b"/><text x="1080" y="198" text-anchor="middle">80</text>
+<rect x="40" y="232" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [79, 82)</title></rect>
+<text x="66.0" y="253" text-anchor="middle">P3</text>
+<rect x="92" y="232" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [82, 84)</title></rect>
+<text x="118.0" y="253" text-anchor="middle">P4</text>
+<rect x="144" y="232" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [84, 86)</title></rect>
+<text x="170.0" y="253" text-anchor="middle">P1</text>
+<rect x="196" y="232" width="104" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [86, 90)</title></rect>
+<text x="248.0" y="253" text-anchor="middle">P3</text>
+<rect x="300" y="232" width="104" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [90, 94)</title></rect>
+<text x="352.0" y="253" text-anchor="middle">P4</text>
+<rect x="404" y="232" width="104" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [94, 98)</title></rect>
+<text x="456.0" y="253" text-anchor="middle">P1</text>
+<rect x="508" y="232" width="104" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [98, 102)</title></rect>
+<text x="560.0" y="253" text-anchor="middle">P3</text>
+<rect x="612" y="232" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [102, 104)</title></rect>
+<text x="638.0" y="253" text-anchor="middle">P4</text>
+<rect x="664" y="232" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [104, 106)</title></rect>
+<text x="690.0" y="253" text-anchor="middle">P1</text>
+<rect x="716" y="232" width="104" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [106, 110)</title></rect>
+<text x="768.0" y="253" text-anchor="middle">P3</text>
+<rect x="820" y="232" width="104" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [110, 114)</title></rect>
+<text x="872.0" y="253" text-anchor="middle">P4</text>
+<rect x="924" y="232" width="104" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [114, 118)</title></rect>
+<text x="976.0" y="253" text-anchor="middle">P1</text>
+<rect x="1028" y="232" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [118, 122)</title></rect>
+<text x="1054.0" y="253" text-anchor="middle">P3</text>
+<path d="M40,264v6" stroke="#64748b"/><text x="40" y="288" text-anchor="middle">80</text>
+<path d="M170,264v6" stroke="#64748b"/><text x="170" y="288" text-anchor="middle">85</text>
+<path d="M300,264v6" stroke="#64748b"/><text x="300" y="288" text-anchor="middle">90</text>
+<path d="M430,264v6" stroke="#64748b"/><text x="430" y="288" text-anchor="middle">95</text>
+<path d="M560,264v6" stroke="#64748b"/><text x="560" y="288" text-anchor="middle">100</text>
+<path d="M690,264v6" stroke="#64748b"/><text x="690" y="288" text-anchor="middle">105</text>
+<path d="M820,264v6" stroke="#64748b"/><text x="820" y="288" text-anchor="middle">110</text>
+<path d="M950,264v6" stroke="#64748b"/><text x="950" y="288" text-anchor="middle">115</text>
+<path d="M1080,264v6" stroke="#64748b"/><text x="1080" y="288" text-anchor="middle">120</text>
+<rect x="40" y="322" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [118, 122)</title></rect>
+<text x="66.0" y="343" text-anchor="middle">P3</text>
+<rect x="92" y="322" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [122, 124)</title></rect>
+<text x="118.0" y="343" text-anchor="middle">P4</text>
+<rect x="144" y="322" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [124, 126)</title></rect>
+<text x="170.0" y="343" text-anchor="middle">P1</text>
+<rect x="196" y="322" width="52" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [126, 128)</title></rect>
+<text x="222.0" y="343" text-anchor="middle">P3</text>
+<rect x="248" y="322" width="104" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [128, 132)</title></rect>
+<text x="300.0" y="343" text-anchor="middle">P4</text>
+<rect x="352" y="322" width="104" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [132, 136)</title></rect>
+<text x="404.0" y="343" text-anchor="middle">P1</text>
+<rect x="456" y="322" width="156" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [136, 142)</title></rect>
+<text x="534.0" y="343" text-anchor="middle">P4</text>
+<rect x="612" y="322" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [142, 144)</title></rect>
+<text x="638.0" y="343" text-anchor="middle">P1</text>
+<rect x="664" y="322" width="104" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [144, 148)</title></rect>
+<text x="716.0" y="343" text-anchor="middle">P4</text>
+<rect x="768" y="322" width="104" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [148, 152)</title></rect>
+<text x="820.0" y="343" text-anchor="middle">P1</text>
+<rect x="872" y="322" width="130" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [152, 157)</title></rect>
+<text x="937.0" y="343" text-anchor="middle">P4</text>
+<path d="M40,354v6" stroke="#64748b"/><text x="40" y="378" text-anchor="middle">120</text>
+<path d="M170,354v6" stroke="#64748b"/><text x="170" y="378" text-anchor="middle">125</text>
+<path d="M300,354v6" stroke="#64748b"/><text x="300" y="378" text-anchor="middle">130</text>
+<path d="M430,354v6" stroke="#64748b"/><text x="430" y="378" text-anchor="middle">135</text>
+<path d="M560,354v6" stroke="#64748b"/><text x="560" y="378" text-anchor="middle">140</text>
+<path d="M690,354v6" stroke="#64748b"/><text x="690" y="378" text-anchor="middle">145</text>
+<path d="M820,354v6" stroke="#64748b"/><text x="820" y="378" text-anchor="middle">150</text>
+<path d="M950,354v6" stroke="#64748b"/><text x="950" y="378" text-anchor="middle">155</text>
+<path d="M1002,354v6" stroke="#64748b"/><text x="1002" y="378" text-anchor="middle">157</text>
+<rect x="34" y="409" width="18" height="16" fill="hsl(9, 58%, 76%)"/><text x="58" y="422">P1</text>
+<rect x="153" y="409" width="18" height="16" fill="hsl(218, 58%, 76%)"/><text x="177" y="422">P2</text>
+<rect x="272" y="409" width="18" height="16" fill="hsl(123, 58%, 76%)"/><text x="296" y="422">P3</text>
+<rect x="391" y="409" width="18" height="16" fill="hsl(225, 58%, 76%)"/><text x="415" y="422">P4</text>
+<rect x="510" y="409" width="18" height="16" fill="hsl(142, 58%, 76%)"/><text x="534" y="422">P5</text>
+<rect x="629" y="409" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="653" y="422">P6</text>
+<rect x="748" y="409" width="18" height="16" fill="hsl(240, 58%, 76%)"/><text x="772" y="422">P7</text>
+<rect x="867" y="409" width="18" height="16" fill="hsl(173, 58%, 76%)"/><text x="891" y="422">P8</text>
+<rect x="986" y="409" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="1010" y="422">P9</text>
+<rect x="34" y="436" width="18" height="16" fill="hsl(117, 58%, 76%)"/><text x="58" y="449">P10</text>
+<rect x="153" y="436" width="18" height="16" fill="hsl(261, 58%, 76%)"/><text x="177" y="449">P11</text>
+<rect x="272" y="436" width="18" height="16" fill="hsl(59, 58%, 76%)"/><text x="296" y="449">P12</text>
+<rect x="391" y="436" width="18" height="16" fill="hsl(267, 58%, 76%)"/><text x="415" y="449">P13</text>
+<rect x="510" y="436" width="18" height="16" fill="hsl(79, 58%, 76%)"/><text x="534" y="449">P14</text>
+<rect x="629" y="436" width="18" height="16" fill="hsl(345, 58%, 76%)"/><text x="653" y="449">P15</text>
+<rect x="748" y="436" width="18" height="16" fill="hsl(31, 58%, 76%)"/><text x="772" y="449">P16</text>
+<rect x="867" y="436" width="18" height="16" fill="hsl(101, 58%, 76%)"/><text x="891" y="449">P17</text>
+<rect x="986" y="436" width="18" height="16" fill="hsl(347, 58%, 76%)"/><text x="1010" y="449">P18</text>
+</g></svg><figcaption>MLFQ на mixed.txt</figcaption></figure>
+<h3>В4. Почему MLFQ не требует знания длительности</h3>
+<p>MLFQ принимает решения по наблюдаемому поведению: исчерпала ли задача квант, на каком она уровне, сколько бюджета осталось и наступил ли boost. Полная длительность burst и remaining не участвуют в выборе очереди. Симулятор хранит remaining только для фиксации факта завершения — это аналог сигнала о завершении процесса от системы. Короткие задачи успевают закончиться в верхних очередях, длительные постепенно уходят ниже; boost возвращает давно ожидающие задачи наверх.</p>
+<p>Для сервера с неизвестными длительностями рекомендована проверенная конфигурация MLFQ (2/4/8, boost 20). На mixed.txt её средний отклик 3.50, против 8.61 у RR q=2; переключений 62 против 76. Все длинные задачи завершаются. Это результат конкретного опыта, а не доказательство оптимальности параметров или гарантия при произвольной перегрузке.</p>
+<h2>Файлы результатов и воспроизводимость</h2>
+<p>Для каждого алгоритма и набора сохранены *_metrics.csv (метрики каждого PID) и *_timeline.csv (непрерывные интервалы [start, end)). Есть сводные CSV, rr_quantums.csv и SVG-диаграммы. manifest.json содержит параметры, SHA-256 исходных файлов и статус внешней сверки. pr5_verification.json и pr5_*_checks.csv содержат подробные результаты сопоставлений. report.html автономен: таблицы и SVG встроены, подключение к сети не требуется. Команды запуска и проверки приведены в README.md проекта.</p></main></html>

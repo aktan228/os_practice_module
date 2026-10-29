@@ -1,0 +1,6 @@
+﻿algorithm,avg_waiting,avg_turnaround,avg_response,switches
+FCFS,8.75,15.25,8.75,3
+SJF,7.75,14.25,7.75,3
+RR q=2,12.75,19.25,2.0,12
+SRTF,6.5,13.0,4.25,4
+PRIORITY,10.75,17.25,8.5,4

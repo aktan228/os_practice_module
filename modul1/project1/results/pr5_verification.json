@@ -1,0 +1,400 @@
+{
+  "status": "PASS",
+  "repository": "https://github.com/aktan228/operation_system_practice_tasks",
+  "commit": "07f7b4bf1721ca904d997848e9c2a885a70abfcf",
+  "verified_on": "2026-10-29",
+  "reference_files_integrity": "PASS",
+  "published_checks": [
+    {
+      "algorithm": "FCFS",
+      "input": "local set1 (same arrival/burst)",
+      "avg_waiting": 8.75,
+      "avg_turnaround": 15.25,
+      "avg_response": 8.75,
+      "status": "PASS"
+    },
+    {
+      "algorithm": "SJF",
+      "input": "local set1 (same arrival/burst)",
+      "avg_waiting": 7.75,
+      "avg_turnaround": 14.25,
+      "avg_response": 7.75,
+      "status": "PASS"
+    },
+    {
+      "algorithm": "SRTF",
+      "input": "local set1 (same arrival/burst)",
+      "avg_waiting": 6.5,
+      "avg_turnaround": 13.0,
+      "avg_response": 4.25,
+      "status": "PASS"
+    },
+    {
+      "algorithm": "RR q=3",
+      "input": "local set1 (same arrival/burst)",
+      "avg_waiting": 13.5,
+      "avg_turnaround": 20.0,
+      "avg_response": 3.0,
+      "status": "PASS"
+    },
+    {
+      "algorithm": "PRIORITY",
+      "input": "repository set1",
+      "avg_waiting": 6.5,
+      "avg_turnaround": 13.0,
+      "avg_response": 4.25,
+      "status": "PASS"
+    }
+  ],
+  "published_passed": 5,
+  "differential_checks": [
+    {
+      "dataset": "set1",
+      "algorithm": "FCFS",
+      "status": "PASS"
+    },
+    {
+      "dataset": "set1",
+      "algorithm": "SJF",
+      "status": "PASS"
+    },
+    {
+      "dataset": "set1",
+      "algorithm": "SRTF",
+      "status": "PASS"
+    },
+    {
+      "dataset": "set1",
+      "algorithm": "PRIORITY",
+      "status": "PASS"
+    },
+    {
+      "dataset": "set1",
+      "algorithm": "PRIORITY aging=2",
+      "status": "PASS"
+    },
+    {
+      "dataset": "set1",
+      "algorithm": "PRIORITY aging=3",
+      "status": "PASS"
+    },
+    {
+      "dataset": "set1",
+      "algorithm": "RR q=1",
+      "status": "PASS"
+    },
+    {
+      "dataset": "set1",
+      "algorithm": "RR q=2",
+      "status": "PASS"
+    },
+    {
+      "dataset": "set1",
+      "algorithm": "RR q=3",
+      "status": "PASS"
+    },
+    {
+      "dataset": "set1",
+      "algorithm": "RR q=4",
+      "status": "PASS"
+    },
+    {
+      "dataset": "set1",
+      "algorithm": "RR q=5",
+      "status": "PASS"
+    },
+    {
+      "dataset": "set1",
+      "algorithm": "RR q=6",
+      "status": "PASS"
+    },
+    {
+      "dataset": "set1",
+      "algorithm": "RR q=7",
+      "status": "PASS"
+    },
+    {
+      "dataset": "set1",
+      "algorithm": "RR q=8",
+      "status": "PASS"
+    },
+    {
+      "dataset": "set1",
+      "algorithm": "RR q=9",
+      "status": "PASS"
+    },
+    {
+      "dataset": "set1",
+      "algorithm": "RR q=10",
+      "status": "PASS"
+    },
+    {
+      "dataset": "jobs",
+      "algorithm": "FCFS",
+      "status": "PASS"
+    },
+    {
+      "dataset": "jobs",
+      "algorithm": "SJF",
+      "status": "PASS"
+    },
+    {
+      "dataset": "jobs",
+      "algorithm": "SRTF",
+      "status": "PASS"
+    },
+    {
+      "dataset": "jobs",
+      "algorithm": "PRIORITY",
+      "status": "PASS"
+    },
+    {
+      "dataset": "jobs",
+      "algorithm": "PRIORITY aging=2",
+      "status": "PASS"
+    },
+    {
+      "dataset": "jobs",
+      "algorithm": "PRIORITY aging=3",
+      "status": "PASS"
+    },
+    {
+      "dataset": "jobs",
+      "algorithm": "RR q=1",
+      "status": "PASS"
+    },
+    {
+      "dataset": "jobs",
+      "algorithm": "RR q=2",
+      "status": "PASS"
+    },
+    {
+      "dataset": "jobs",
+      "algorithm": "RR q=3",
+      "status": "PASS"
+    },
+    {
+      "dataset": "jobs",
+      "algorithm": "RR q=4",
+      "status": "PASS"
+    },
+    {
+      "dataset": "jobs",
+      "algorithm": "RR q=5",
+      "status": "PASS"
+    },
+    {
+      "dataset": "jobs",
+      "algorithm": "RR q=6",
+      "status": "PASS"
+    },
+    {
+      "dataset": "jobs",
+      "algorithm": "RR q=7",
+      "status": "PASS"
+    },
+    {
+      "dataset": "jobs",
+      "algorithm": "RR q=8",
+      "status": "PASS"
+    },
+    {
+      "dataset": "jobs",
+      "algorithm": "RR q=9",
+      "status": "PASS"
+    },
+    {
+      "dataset": "jobs",
+      "algorithm": "RR q=10",
+      "status": "PASS"
+    },
+    {
+      "dataset": "mixed",
+      "algorithm": "FCFS",
+      "status": "PASS"
+    },
+    {
+      "dataset": "mixed",
+      "algorithm": "SJF",
+      "status": "PASS"
+    },
+    {
+      "dataset": "mixed",
+      "algorithm": "SRTF",
+      "status": "PASS"
+    },
+    {
+      "dataset": "mixed",
+      "algorithm": "PRIORITY",
+      "status": "PASS"
+    },
+    {
+      "dataset": "mixed",
+      "algorithm": "PRIORITY aging=2",
+      "status": "PASS"
+    },
+    {
+      "dataset": "mixed",
+      "algorithm": "PRIORITY aging=3",
+      "status": "PASS"
+    },
+    {
+      "dataset": "mixed",
+      "algorithm": "RR q=1",
+      "status": "PASS"
+    },
+    {
+      "dataset": "mixed",
+      "algorithm": "RR q=2",
+      "status": "PASS"
+    },
+    {
+      "dataset": "mixed",
+      "algorithm": "RR q=3",
+      "status": "PASS"
+    },
+    {
+      "dataset": "mixed",
+      "algorithm": "RR q=4",
+      "status": "PASS"
+    },
+    {
+      "dataset": "mixed",
+      "algorithm": "RR q=5",
+      "status": "PASS"
+    },
+    {
+      "dataset": "mixed",
+      "algorithm": "RR q=6",
+      "status": "PASS"
+    },
+    {
+      "dataset": "mixed",
+      "algorithm": "RR q=7",
+      "status": "PASS"
+    },
+    {
+      "dataset": "mixed",
+      "algorithm": "RR q=8",
+      "status": "PASS"
+    },
+    {
+      "dataset": "mixed",
+      "algorithm": "RR q=9",
+      "status": "PASS"
+    },
+    {
+      "dataset": "mixed",
+      "algorithm": "RR q=10",
+      "status": "PASS"
+    },
+    {
+      "dataset": "starve",
+      "algorithm": "FCFS",
+      "status": "PASS"
+    },
+    {
+      "dataset": "starve",
+      "algorithm": "SJF",
+      "status": "PASS"
+    },
+    {
+      "dataset": "starve",
+      "algorithm": "SRTF",
+      "status": "PASS"
+    },
+    {
+      "dataset": "starve",
+      "algorithm": "PRIORITY",
+      "status": "PASS"
+    },
+    {
+      "dataset": "starve",
+      "algorithm": "PRIORITY aging=2",
+      "status": "PASS"
+    },
+    {
+      "dataset": "starve",
+      "algorithm": "PRIORITY aging=3",
+      "status": "PASS"
+    },
+    {
+      "dataset": "starve",
+      "algorithm": "RR q=1",
+      "status": "PASS"
+    },
+    {
+      "dataset": "starve",
+      "algorithm": "RR q=2",
+      "status": "PASS"
+    },
+    {
+      "dataset": "starve",
+      "algorithm": "RR q=3",
+      "status": "PASS"
+    },
+    {
+      "dataset": "starve",
+      "algorithm": "RR q=4",
+      "status": "PASS"
+    },
+    {
+      "dataset": "starve",
+      "algorithm": "RR q=5",
+      "status": "PASS"
+    },
+    {
+      "dataset": "starve",
+      "algorithm": "RR q=6",
+      "status": "PASS"
+    },
+    {
+      "dataset": "starve",
+      "algorithm": "RR q=7",
+      "status": "PASS"
+    },
+    {
+      "dataset": "starve",
+      "algorithm": "RR q=8",
+      "status": "PASS"
+    },
+    {
+      "dataset": "starve",
+      "algorithm": "RR q=9",
+      "status": "PASS"
+    },
+    {
+      "dataset": "starve",
+      "algorithm": "RR q=10",
+      "status": "PASS"
+    }
+  ],
+  "differential_passed": 64,
+  "full_upstream_source_issue": {
+    "type": "SyntaxError",
+    "line": 149,
+    "message": "':' expected after dictionary key",
+    "source_line": "alidate                     \"turnaround\": turnaround, \"response\": first[p.pid] - p.arrival})"
+  },
+  "upstream_execution_scope": "Unmodified source prefix before def metrics; full script not executed",
+  "local_priorities": [
+    2,
+    3,
+    1,
+    4
+  ],
+  "repository_priorities": [
+    3,
+    1,
+    4,
+    2
+  ],
+  "local_priority_averages": {
+    "waiting": 10.75,
+    "turnaround": 17.25,
+    "response": 8.5
+  },
+  "rr_project_quantum": 2,
+  "rr_published_quantum": 3,
+  "teacher_original_reference_verified": false
+}

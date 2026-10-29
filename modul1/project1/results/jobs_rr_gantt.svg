@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="189" viewBox="0 0 1120 189" role="img" aria-label="jobs.txt — RR q=2">
+<rect width="100%" height="100%" fill="#fff"/>
+<g font-family="Arial,sans-serif" font-size="13" fill="#18283b">
+<text x="24" y="28" font-size="19" font-weight="bold">jobs.txt — RR q=2</text>
+<rect x="40" y="52" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [0, 2)</title></rect>
+<text x="66.0" y="73" text-anchor="middle">P1</text>
+<rect x="92" y="52" width="52" height="32" fill="hsl(218, 58%, 76%)" stroke="#fff"><title>P2: [2, 4)</title></rect>
+<text x="118.0" y="73" text-anchor="middle">P2</text>
+<rect x="144" y="52" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [4, 6)</title></rect>
+<text x="170.0" y="73" text-anchor="middle">P1</text>
+<rect x="196" y="52" width="26" height="32" fill="hsl(123, 58%, 76%)" stroke="#fff"><title>P3: [6, 7)</title></rect>
+<rect x="222" y="52" width="52" height="32" fill="hsl(218, 58%, 76%)" stroke="#fff"><title>P2: [7, 9)</title></rect>
+<text x="248.0" y="73" text-anchor="middle">P2</text>
+<rect x="274" y="52" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [9, 11)</title></rect>
+<text x="300.0" y="73" text-anchor="middle">P4</text>
+<rect x="326" y="52" width="52" height="32" fill="hsl(142, 58%, 76%)" stroke="#fff"><title>P5: [11, 13)</title></rect>
+<text x="352.0" y="73" text-anchor="middle">P5</text>
+<rect x="378" y="52" width="52" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [13, 15)</title></rect>
+<text x="404.0" y="73" text-anchor="middle">P1</text>
+<rect x="430" y="52" width="52" height="32" fill="hsl(84, 58%, 76%)" stroke="#fff"><title>P6: [15, 17)</title></rect>
+<text x="456.0" y="73" text-anchor="middle">P6</text>
+<rect x="482" y="52" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [17, 19)</title></rect>
+<text x="508.0" y="73" text-anchor="middle">P4</text>
+<rect x="534" y="52" width="26" height="32" fill="hsl(142, 58%, 76%)" stroke="#fff"><title>P5: [19, 20)</title></rect>
+<rect x="560" y="52" width="26" height="32" fill="hsl(9, 58%, 76%)" stroke="#fff"><title>P1: [20, 21)</title></rect>
+<rect x="586" y="52" width="52" height="32" fill="hsl(225, 58%, 76%)" stroke="#fff"><title>P4: [21, 23)</title></rect>
+<text x="612.0" y="73" text-anchor="middle">P4</text>
+<path d="M40,84v6" stroke="#64748b"/><text x="40" y="108" text-anchor="middle">0</text>
+<path d="M92,84v6" stroke="#64748b"/><text x="92" y="108" text-anchor="middle">2</text>
+<path d="M144,84v6" stroke="#64748b"/><text x="144" y="108" text-anchor="middle">4</text>
+<path d="M170,84v6" stroke="#64748b"/><text x="170" y="108" text-anchor="middle">5</text>
+<path d="M196,84v6" stroke="#64748b"/><text x="196" y="108" text-anchor="middle">6</text>
+<path d="M222,84v6" stroke="#64748b"/><text x="222" y="108" text-anchor="middle">7</text>
+<path d="M274,84v6" stroke="#64748b"/><text x="274" y="108" text-anchor="middle">9</text>
+<path d="M300,84v6" stroke="#64748b"/><text x="300" y="108" text-anchor="middle">10</text>
+<path d="M326,84v6" stroke="#64748b"/><text x="326" y="108" text-anchor="middle">11</text>
+<path d="M378,84v6" stroke="#64748b"/><text x="378" y="108" text-anchor="middle">13</text>
+<path d="M430,84v6" stroke="#64748b"/><text x="430" y="108" text-anchor="middle">15</text>
+<path d="M482,84v6" stroke="#64748b"/><text x="482" y="108" text-anchor="middle">17</text>
+<path d="M534,84v6" stroke="#64748b"/><text x="534" y="108" text-anchor="middle">19</text>
+<path d="M560,84v6" stroke="#64748b"/><text x="560" y="108" text-anchor="middle">20</text>
+<path d="M586,84v6" stroke="#64748b"/><text x="586" y="108" text-anchor="middle">21</text>
+<path d="M638,84v6" stroke="#64748b"/><text x="638" y="108" text-anchor="middle">23</text>
+<rect x="34" y="139" width="18" height="16" fill="hsl(9, 58%, 76%)"/><text x="58" y="152">P1</text>
+<rect x="153" y="139" width="18" height="16" fill="hsl(218, 58%, 76%)"/><text x="177" y="152">P2</text>
+<rect x="272" y="139" width="18" height="16" fill="hsl(123, 58%, 76%)"/><text x="296" y="152">P3</text>
+<rect x="391" y="139" width="18" height="16" fill="hsl(225, 58%, 76%)"/><text x="415" y="152">P4</text>
+<rect x="510" y="139" width="18" height="16" fill="hsl(142, 58%, 76%)"/><text x="534" y="152">P5</text>
+<rect x="629" y="139" width="18" height="16" fill="hsl(84, 58%, 76%)"/><text x="653" y="152">P6</text>
+</g></svg>

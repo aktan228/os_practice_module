@@ -1,0 +1,21 @@
+Command: C:\Python314\python.exe -u -m unittest discover -s project1 -p test_scheduler.py -v
+test_aging_advances_p1_in_supplied_workload (test_scheduler.SchedulingTests.test_aging_advances_p1_in_supplied_workload) ... ok
+test_equal_key_keeps_current_even_if_other_arrived_earlier (test_scheduler.SchedulingTests.test_equal_key_keeps_current_even_if_other_arrived_earlier) ... ok
+test_fcfs_hand_calculation (test_scheduler.SchedulingTests.test_fcfs_hand_calculation) ... ok
+test_idle_and_single_task_switches (test_scheduler.SchedulingTests.test_idle_and_single_task_switches) ... ok
+test_input_validation (test_scheduler.SchedulingTests.test_input_validation) ... ok
+test_mlfq_boost_resets_level_and_budget (test_scheduler.SchedulingTests.test_mlfq_boost_resets_level_and_budget) ... ok
+test_mlfq_demotions (test_scheduler.SchedulingTests.test_mlfq_demotions) ... ok
+test_mlfq_preemption_preserves_budget (test_scheduler.SchedulingTests.test_mlfq_preemption_preserves_budget) ... ok
+test_priority_preemption (test_scheduler.SchedulingTests.test_priority_preemption) ... ok
+test_randomized_conservation_and_metrics (test_scheduler.SchedulingTests.test_randomized_conservation_and_metrics) ... ok
+test_rr_hand_calculation_and_boundary_arrival (test_scheduler.SchedulingTests.test_rr_hand_calculation_and_boundary_arrival) ... ok
+test_sjf_hand_calculation (test_scheduler.SchedulingTests.test_sjf_hand_calculation) ... ok
+test_srtf_hand_calculation (test_scheduler.SchedulingTests.test_srtf_hand_calculation) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.078s
+
+OK
+
+Exit code: 0

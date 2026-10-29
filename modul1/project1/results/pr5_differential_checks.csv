@@ -1,0 +1,65 @@
+﻿dataset,algorithm,status
+set1,FCFS,PASS
+set1,SJF,PASS
+set1,SRTF,PASS
+set1,PRIORITY,PASS
+set1,PRIORITY aging=2,PASS
+set1,PRIORITY aging=3,PASS
+set1,RR q=1,PASS
+set1,RR q=2,PASS
+set1,RR q=3,PASS
+set1,RR q=4,PASS
+set1,RR q=5,PASS
+set1,RR q=6,PASS
+set1,RR q=7,PASS
+set1,RR q=8,PASS
+set1,RR q=9,PASS
+set1,RR q=10,PASS
+jobs,FCFS,PASS
+jobs,SJF,PASS
+jobs,SRTF,PASS
+jobs,PRIORITY,PASS
+jobs,PRIORITY aging=2,PASS
+jobs,PRIORITY aging=3,PASS
+jobs,RR q=1,PASS
+jobs,RR q=2,PASS
+jobs,RR q=3,PASS
+jobs,RR q=4,PASS
+jobs,RR q=5,PASS
+jobs,RR q=6,PASS
+jobs,RR q=7,PASS
+jobs,RR q=8,PASS
+jobs,RR q=9,PASS
+jobs,RR q=10,PASS
+mixed,FCFS,PASS
+mixed,SJF,PASS
+mixed,SRTF,PASS
+mixed,PRIORITY,PASS
+mixed,PRIORITY aging=2,PASS
+mixed,PRIORITY aging=3,PASS
+mixed,RR q=1,PASS
+mixed,RR q=2,PASS
+mixed,RR q=3,PASS
+mixed,RR q=4,PASS
+mixed,RR q=5,PASS
+mixed,RR q=6,PASS
+mixed,RR q=7,PASS
+mixed,RR q=8,PASS
+mixed,RR q=9,PASS
+mixed,RR q=10,PASS
+starve,FCFS,PASS
+starve,SJF,PASS
+starve,SRTF,PASS
+starve,PRIORITY,PASS
+starve,PRIORITY aging=2,PASS
+starve,PRIORITY aging=3,PASS
+starve,RR q=1,PASS
+starve,RR q=2,PASS
+starve,RR q=3,PASS
+starve,RR q=4,PASS
+starve,RR q=5,PASS
+starve,RR q=6,PASS
+starve,RR q=7,PASS
+starve,RR q=8,PASS
+starve,RR q=9,PASS
+starve,RR q=10,PASS

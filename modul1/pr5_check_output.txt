@@ -1,0 +1,8 @@
+Command: /usr/bin/python3 -u project1/verify_pr5.py
+PR-5 repository commit: 07f7b4bf1721ca904d997848e9c2a885a70abfcf
+Published results: 5/5 PASS
+Differential schedules: 64/64 PASS
+Note: full upstream source contains a syntax error; unchanged simulation prefix checked separately.
+Repository cross-check passed; original teacher answer key and paper photo remain separate requirements.
+
+Exit code: 0

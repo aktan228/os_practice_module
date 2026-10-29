@@ -1,0 +1,6 @@
+﻿algorithm,input,avg_waiting,avg_turnaround,avg_response,status
+FCFS,local set1 (same arrival/burst),8.75,15.25,8.75,PASS
+SJF,local set1 (same arrival/burst),7.75,14.25,7.75,PASS
+SRTF,local set1 (same arrival/burst),6.5,13.0,4.25,PASS
+RR q=3,local set1 (same arrival/burst),13.5,20.0,3.0,PASS
+PRIORITY,repository set1,6.5,13.0,4.25,PASS

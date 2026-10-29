@@ -1,0 +1,23 @@
+{
+  "input_sha256": {
+    "set1.txt": "d73b1b25193c218b70ca5e593a0334db4a4cb54e1eadca0802411765f4642230",
+    "jobs.txt": "cbd7c5f14f6f9ad3906d7521f1ddac906aca0ab76fd84c7999b368cfbeb27175",
+    "mixed.txt": "40d395bbfd66fac3f37ce15884aaddafbb4be77e251ab0b5a1bac68e2358b8f3",
+    "starve.txt": "e9c28e6bb4a3bebf95732e34b10e0762cd178d77cadfdf1702894b0bf19b1155"
+  },
+  "rr_default_quantum": 2,
+  "aging_interval": 3,
+  "mlfq_quanta": [
+    2,
+    4,
+    8
+  ],
+  "mlfq_boost_interval": 20,
+  "pr5_reference_supplied": true,
+  "pr5_repository_verified": true,
+  "pr5_reference_commit": "07f7b4bf1721ca904d997848e9c2a885a70abfcf",
+  "pr5_published_checks_passed": 5,
+  "pr5_differential_checks_passed": 64,
+  "pr5_teacher_original_verified": false,
+  "hand_control_passed": true
+}

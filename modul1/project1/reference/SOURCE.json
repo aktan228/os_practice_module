@@ -1,0 +1,52 @@
+{
+  "repository": "https://github.com/aktan228/operation_system_practice_tasks",
+  "commit": "07f7b4bf1721ca904d997848e9c2a885a70abfcf",
+  "verified_on": "2026-10-29",
+  "files": [
+    {
+      "path": "pr5/README.md",
+      "blob_sha": "959135d6bebae9b7b4a6d9eefeeea0ab8524f93f",
+      "url": "https://github.com/aktan228/operation_system_practice_tasks/blob/07f7b4bf1721ca904d997848e9c2a885a70abfcf/pr5/README.md"
+    },
+    {
+      "path": "pr5/sched.py",
+      "blob_sha": "e818b922e0cafbc12a5f7392b1c460bd6427ea0c",
+      "url": "https://github.com/aktan228/operation_system_practice_tasks/blob/07f7b4bf1721ca904d997848e9c2a885a70abfcf/pr5/sched.py"
+    },
+    {
+      "path": "pr5/test_sched.py",
+      "blob_sha": "39a471bd855cc9698f1c19ccb7a169e7b46c4f8d",
+      "url": "https://github.com/aktan228/operation_system_practice_tasks/blob/07f7b4bf1721ca904d997848e9c2a885a70abfcf/pr5/test_sched.py"
+    },
+    {
+      "path": "pr5/set1.txt",
+      "blob_sha": "45433915d658f61cbcbe7089cab2d4decc364d9b",
+      "url": "https://github.com/aktan228/operation_system_practice_tasks/blob/07f7b4bf1721ca904d997848e9c2a885a70abfcf/pr5/set1.txt"
+    },
+    {
+      "path": "pr5/results/set1_fcfs.txt",
+      "blob_sha": "5bd71f43b70d82a59541c1bfe1a0996806b29b63",
+      "url": "https://github.com/aktan228/operation_system_practice_tasks/blob/07f7b4bf1721ca904d997848e9c2a885a70abfcf/pr5/results/set1_fcfs.txt"
+    },
+    {
+      "path": "pr5/results/set1_sjf.txt",
+      "blob_sha": "f85323da08f34d6dd55a5906a47927ebc2edb8b3",
+      "url": "https://github.com/aktan228/operation_system_practice_tasks/blob/07f7b4bf1721ca904d997848e9c2a885a70abfcf/pr5/results/set1_sjf.txt"
+    },
+    {
+      "path": "pr5/results/set1_rr.txt",
+      "blob_sha": "957b6c13be98b1bc3666ea2f3e60b03f96b4b552",
+      "url": "https://github.com/aktan228/operation_system_practice_tasks/blob/07f7b4bf1721ca904d997848e9c2a885a70abfcf/pr5/results/set1_rr.txt"
+    },
+    {
+      "path": "pr5/results/set1_srtf.txt",
+      "blob_sha": "6914ac401fbc2f5bc59f4042526732f81dc0696b",
+      "url": "https://github.com/aktan228/operation_system_practice_tasks/blob/07f7b4bf1721ca904d997848e9c2a885a70abfcf/pr5/results/set1_srtf.txt"
+    },
+    {
+      "path": "pr5/results/set1_priority.txt",
+      "blob_sha": "6914ac401fbc2f5bc59f4042526732f81dc0696b",
+      "url": "https://github.com/aktan228/operation_system_practice_tasks/blob/07f7b4bf1721ca904d997848e9c2a885a70abfcf/pr5/results/set1_priority.txt"
+    }
+  ]
+}

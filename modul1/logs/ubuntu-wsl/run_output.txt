@@ -1,0 +1,7 @@
+Command: /usr/bin/python3 -u project1/run.py
+Report: /mnt/c/Users/lulu/Documents/Projects/os_module/modul1/project1/results/report.html
+README: /mnt/c/Users/lulu/Documents/Projects/os_module/modul1/project1/README.md
+A/B/C calculations complete. PR-5 repository: 5 published results and 64 schedules PASS.
+Paper photo pending. The original teacher answer key is separate from the repository cross-check.
+
+Exit code: 0
