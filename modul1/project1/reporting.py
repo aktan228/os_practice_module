@@ -95,36 +95,27 @@ def rr_chart(results):
 class Document:
     def __init__(self, output):
         self.output = output
-        self.md = []
         self.html = []
 
     def heading(self, text, level=2):
-        self.md.append(f"{'#' * level} {text}\n")
         self.html.append(f"<h{level}>{html.escape(text)}</h{level}>")
 
     def paragraph(self, text):
-        self.md.append(text + "\n")
         self.html.append(f"<p>{html.escape(text)}</p>")
 
     def link(self, label, url):
-        self.md.append(f"[{label}]({url})\n")
         self.html.append(f'<p><a href="{html.escape(url, quote=True)}">{html.escape(label)}</a></p>')
 
     def table(self, headers, rows):
         rows = [[number(cell) for cell in row] for row in rows]
-        self.md += ["| " + " | ".join(headers) + " |", "| " + " | ".join("---" for _ in headers) + " |"]
-        self.md += ["| " + " | ".join(row) + " |" for row in rows]
-        self.md.append("")
         self.html.append('<div class="table-wrap"><table><thead><tr>' + "".join(f"<th>{html.escape(x)}</th>" for x in headers) + "</tr></thead><tbody>" +
                          "".join("<tr>" + "".join(f"<td>{html.escape(x)}</td>" for x in row) + "</tr>" for row in rows) + "</tbody></table></div>")
 
     def image(self, name, title, source):
         (self.output / name).write_text(source, encoding="utf-8")
-        self.md.append(f"![{title}]({name})\n")
         self.html.append(f'<figure>{source}<figcaption>{html.escape(title)}</figcaption></figure>')
 
     def save(self):
-        (self.output / "report.md").write_text("\n".join(self.md), encoding="utf-8")
         style = """body{margin:0;background:#edf2f7;color:#18283b;font:16px/1.6 system-ui,Arial,sans-serif}main{max-width:1180px;margin:32px auto;padding:36px;background:white;border-radius:12px}h1{font-size:30px;line-height:1.2}h2{margin-top:40px;border-bottom:2px solid #dce5ee;padding-bottom:8px}h3{margin-top:28px}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:14px;margin:16px 0}th,td{border:1px solid #dce5ee;padding:8px 10px;text-align:right;white-space:nowrap}th{background:#eaf1f8}th:first-child,td:first-child{text-align:left}tbody tr:nth-child(even){background:#f7fafc}figure{margin:24px 0;overflow:auto}figure svg{max-width:100%;height:auto}figcaption{font-size:13px;color:#52677b}p{max-width:1050px}.actions{margin:0 0 24px}button{padding:8px 18px;border:0;border-radius:6px;background:#1d4ed8;color:white;cursor:pointer}@media print{body{background:white}main{margin:0;padding:0}h2{break-after:avoid}tr,figure{break-inside:avoid}table{font-size:10px}th,td{padding:4px}.actions{display:none}}"""
         page = '<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Проект 1 — А, Б, В</title><style>' + style + '</style><main><div class="actions"><button onclick="window.print()">Печать / сохранить PDF</button></div>' + "\n".join(self.html) + '</main></html>'
         (self.output / "report.html").write_text(page, encoding="utf-8")
@@ -169,14 +160,18 @@ def generate(input_dir: Path, output: Path, *, aging_interval=3, quanta=(2, 4, 8
     sweep = [simulate(datasets["mixed"], "RR", quantum=q) for q in range(1, 11)]
     aged = simulate(datasets["starve"], "PRIORITY", aging_interval=aging_interval)
     mlfq = simulate(datasets["mixed"], "MLFQ", quanta=quanta, boost_interval=boost_interval)
-    for name, results in runs.items():
-        for a, r in zip(algorithms, results):
-            save_run(output, f"{name}_{a.lower()}", r)
-        write_csv(output / f"{name}_summary.csv", (dict(zip(["algorithm", "avg_waiting", "avg_turnaround", "avg_response", "switches"], summary_row(r))) for r in results))
-    for q, r in enumerate(sweep, 1):
-        save_run(output, f"mixed_rr_q{q}", r)
-    save_run(output, "starve_priority_aging", aged)
-    save_run(output, "mixed_mlfq", mlfq)
+    # A single table per kind of data; RR q=2 appears only once.
+    all_runs = {(name, r.algorithm): r for name, results in runs.items() for r in results}
+    all_runs.update({("mixed", r.algorithm): r for r in sweep})
+    all_runs[("starve", aged.algorithm)] = aged
+    all_runs[("mixed", mlfq.algorithm)] = mlfq
+    write_csv(output / "metrics.csv", ({"dataset": name, "algorithm": label, **asdict(m)}
+              for (name, label), r in all_runs.items() for m in r.metrics))
+    write_csv(output / "timeline.csv", ({"dataset": name, "algorithm": label, **asdict(s)}
+              for (name, label), r in all_runs.items() for s in r.timeline))
+    write_csv(output / "summary.csv", ({"dataset": name, **dict(zip(
+              ["algorithm", "avg_waiting", "avg_turnaround", "avg_response", "switches"], summary_row(r)))}
+              for (name, _), r in all_runs.items()))
     write_csv(output / "rr_quantums.csv", ({"quantum": q, "avg_waiting": r.average("waiting"),
                "avg_turnaround": r.average("turnaround"), "avg_response": r.average("response"),
                "switches": r.switches, "dispatches": r.dispatches} for q, r in enumerate(sweep, 1)))
@@ -281,6 +276,6 @@ def generate(input_dir: Path, output: Path, *, aging_interval=3, quanta=(2, 4, 8
     doc.paragraph("MLFQ принимает решения по наблюдаемому поведению: исчерпала ли задача квант, на каком она уровне, сколько бюджета осталось и наступил ли boost. Полная длительность burst и remaining не участвуют в выборе очереди. Симулятор хранит remaining только для фиксации факта завершения — это аналог сигнала о завершении процесса от системы. Короткие задачи успевают закончиться в верхних очередях, длительные постепенно уходят ниже; boost возвращает давно ожидающие задачи наверх.")
     doc.paragraph(f"Для сервера с неизвестными длительностями рекомендована проверенная конфигурация MLFQ ({quanta[0]}/{quanta[1]}/{quanta[2]}, boost {boost_interval}). На mixed.txt её средний отклик {mlfq.average('response'):.2f}, против {runs['mixed'][2].average('response'):.2f} у RR q=2; переключений {mlfq.switches} против {runs['mixed'][2].switches}. Все длинные задачи завершаются. Это результат конкретного опыта, а не доказательство оптимальности параметров или гарантия при произвольной перегрузке.")
     doc.heading("Файлы результатов и воспроизводимость")
-    doc.paragraph("Для каждого алгоритма и набора сохранены *_metrics.csv (метрики каждого PID) и *_timeline.csv (непрерывные интервалы [start, end)). Есть сводные CSV, rr_quantums.csv и SVG-диаграммы. manifest.json содержит параметры, SHA-256 исходных файлов и статус внешней сверки. pr5_verification.json и pr5_*_checks.csv содержат подробные результаты сопоставлений. report.html автономен: таблицы и SVG встроены, подключение к сети не требуется. Команды запуска и проверки приведены в README.md проекта.")
+    doc.paragraph("metrics.csv содержит метрики каждого PID, timeline.csv — интервалы [start, end), summary.csv — сравнение всех запусков. Набор и алгоритм указаны в первых двух столбцах; повторный RR q=2 исключён. Отдельно сохранены rr_quantums.csv и SVG для презентации. manifest.json содержит параметры и SHA-256 исходных файлов; pr5_verification.json и pr5_*_checks.csv — результаты сверки. report.html автономен. Команды и выводы находятся в основном README папки modul1; он не перезаписывается при запуске.")
     doc.save()
     return {"jobs": runs["jobs"], "mixed": runs["mixed"], "plain_p1": plain_p1, "aged_p1": aged_p1}

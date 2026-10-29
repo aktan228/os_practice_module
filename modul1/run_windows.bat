@@ -1,4 +1,5 @@
 @echo off
+rem Responsible: Kashymbekov Aktan.
 cd /d "%~dp0"
 python run_all.py
 if errorlevel 1 (
@@ -6,5 +7,5 @@ if errorlevel 1 (
   pause
   exit /b 1
 )
-echo All checks passed. Read CHECK_STATUS.md and project1\results\report.html
+echo All checks passed. Read README.md and project1\results\report.html
 pause

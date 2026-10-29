@@ -1,0 +1,875 @@
+﻿dataset,algorithm,start,end,pid
+set1,FCFS,0,8,P1
+set1,FCFS,8,12,P2
+set1,FCFS,12,21,P3
+set1,FCFS,21,26,P4
+set1,SJF,0,8,P1
+set1,SJF,8,12,P2
+set1,SJF,12,17,P4
+set1,SJF,17,26,P3
+set1,RR q=2,0,2,P1
+set1,RR q=2,2,4,P2
+set1,RR q=2,4,6,P3
+set1,RR q=2,6,8,P1
+set1,RR q=2,8,10,P4
+set1,RR q=2,10,12,P2
+set1,RR q=2,12,14,P3
+set1,RR q=2,14,16,P1
+set1,RR q=2,16,18,P4
+set1,RR q=2,18,20,P3
+set1,RR q=2,20,22,P1
+set1,RR q=2,22,23,P4
+set1,RR q=2,23,26,P3
+set1,SRTF,0,1,P1
+set1,SRTF,1,5,P2
+set1,SRTF,5,10,P4
+set1,SRTF,10,17,P1
+set1,SRTF,17,26,P3
+set1,PRIORITY,0,2,P1
+set1,PRIORITY,2,11,P3
+set1,PRIORITY,11,17,P1
+set1,PRIORITY,17,21,P2
+set1,PRIORITY,21,26,P4
+jobs,FCFS,0,7,P1
+jobs,FCFS,7,11,P2
+jobs,FCFS,11,12,P3
+jobs,FCFS,12,18,P4
+jobs,FCFS,18,21,P5
+jobs,FCFS,21,23,P6
+jobs,SJF,0,7,P1
+jobs,SJF,7,8,P3
+jobs,SJF,8,10,P6
+jobs,SJF,10,13,P5
+jobs,SJF,13,17,P2
+jobs,SJF,17,23,P4
+jobs,RR q=2,0,2,P1
+jobs,RR q=2,2,4,P2
+jobs,RR q=2,4,6,P1
+jobs,RR q=2,6,7,P3
+jobs,RR q=2,7,9,P2
+jobs,RR q=2,9,11,P4
+jobs,RR q=2,11,13,P5
+jobs,RR q=2,13,15,P1
+jobs,RR q=2,15,17,P6
+jobs,RR q=2,17,19,P4
+jobs,RR q=2,19,20,P5
+jobs,RR q=2,20,21,P1
+jobs,RR q=2,21,23,P4
+jobs,SRTF,0,2,P1
+jobs,SRTF,2,3,P2
+jobs,SRTF,3,4,P3
+jobs,SRTF,4,7,P2
+jobs,SRTF,7,10,P5
+jobs,SRTF,10,12,P6
+jobs,SRTF,12,17,P1
+jobs,SRTF,17,23,P4
+jobs,PRIORITY,0,2,P1
+jobs,PRIORITY,2,6,P2
+jobs,PRIORITY,6,8,P4
+jobs,PRIORITY,8,10,P6
+jobs,PRIORITY,10,14,P4
+jobs,PRIORITY,14,19,P1
+jobs,PRIORITY,19,20,P3
+jobs,PRIORITY,20,23,P5
+mixed,FCFS,0,40,P1
+mixed,FCFS,40,42,P2
+mixed,FCFS,42,77,P3
+mixed,FCFS,77,122,P4
+mixed,FCFS,122,123,P5
+mixed,FCFS,123,124,P6
+mixed,FCFS,124,128,P7
+mixed,FCFS,128,130,P8
+mixed,FCFS,130,132,P9
+mixed,FCFS,132,136,P10
+mixed,FCFS,136,138,P11
+mixed,FCFS,138,141,P12
+mixed,FCFS,141,142,P13
+mixed,FCFS,142,143,P14
+mixed,FCFS,143,146,P15
+mixed,FCFS,146,150,P16
+mixed,FCFS,150,153,P17
+mixed,FCFS,153,157,P18
+mixed,SJF,0,40,P1
+mixed,SJF,40,41,P5
+mixed,SJF,41,42,P6
+mixed,SJF,42,43,P13
+mixed,SJF,43,44,P14
+mixed,SJF,44,46,P2
+mixed,SJF,46,48,P8
+mixed,SJF,48,50,P9
+mixed,SJF,50,52,P11
+mixed,SJF,52,55,P12
+mixed,SJF,55,58,P15
+mixed,SJF,58,61,P17
+mixed,SJF,61,65,P7
+mixed,SJF,65,69,P10
+mixed,SJF,69,73,P16
+mixed,SJF,73,77,P18
+mixed,SJF,77,112,P3
+mixed,SJF,112,157,P4
+mixed,RR q=2,0,4,P1
+mixed,RR q=2,4,6,P2
+mixed,RR q=2,6,8,P3
+mixed,RR q=2,8,10,P1
+mixed,RR q=2,10,12,P4
+mixed,RR q=2,12,13,P5
+mixed,RR q=2,13,15,P3
+mixed,RR q=2,15,17,P1
+mixed,RR q=2,17,18,P6
+mixed,RR q=2,18,20,P4
+mixed,RR q=2,20,22,P7
+mixed,RR q=2,22,24,P3
+mixed,RR q=2,24,26,P1
+mixed,RR q=2,26,28,P8
+mixed,RR q=2,28,30,P9
+mixed,RR q=2,30,32,P4
+mixed,RR q=2,32,34,P10
+mixed,RR q=2,34,36,P7
+mixed,RR q=2,36,38,P3
+mixed,RR q=2,38,40,P11
+mixed,RR q=2,40,42,P12
+mixed,RR q=2,42,44,P1
+mixed,RR q=2,44,45,P13
+mixed,RR q=2,45,46,P14
+mixed,RR q=2,46,48,P4
+mixed,RR q=2,48,50,P10
+mixed,RR q=2,50,52,P15
+mixed,RR q=2,52,54,P3
+mixed,RR q=2,54,56,P16
+mixed,RR q=2,56,58,P17
+mixed,RR q=2,58,59,P12
+mixed,RR q=2,59,61,P1
+mixed,RR q=2,61,63,P18
+mixed,RR q=2,63,65,P4
+mixed,RR q=2,65,66,P15
+mixed,RR q=2,66,68,P3
+mixed,RR q=2,68,70,P16
+mixed,RR q=2,70,71,P17
+mixed,RR q=2,71,73,P1
+mixed,RR q=2,73,75,P18
+mixed,RR q=2,75,77,P4
+mixed,RR q=2,77,79,P3
+mixed,RR q=2,79,81,P1
+mixed,RR q=2,81,83,P4
+mixed,RR q=2,83,85,P3
+mixed,RR q=2,85,87,P1
+mixed,RR q=2,87,89,P4
+mixed,RR q=2,89,91,P3
+mixed,RR q=2,91,93,P1
+mixed,RR q=2,93,95,P4
+mixed,RR q=2,95,97,P3
+mixed,RR q=2,97,99,P1
+mixed,RR q=2,99,101,P4
+mixed,RR q=2,101,103,P3
+mixed,RR q=2,103,105,P1
+mixed,RR q=2,105,107,P4
+mixed,RR q=2,107,109,P3
+mixed,RR q=2,109,111,P1
+mixed,RR q=2,111,113,P4
+mixed,RR q=2,113,115,P3
+mixed,RR q=2,115,117,P1
+mixed,RR q=2,117,119,P4
+mixed,RR q=2,119,121,P3
+mixed,RR q=2,121,123,P1
+mixed,RR q=2,123,125,P4
+mixed,RR q=2,125,127,P3
+mixed,RR q=2,127,129,P1
+mixed,RR q=2,129,131,P4
+mixed,RR q=2,131,133,P3
+mixed,RR q=2,133,135,P1
+mixed,RR q=2,135,137,P4
+mixed,RR q=2,137,139,P3
+mixed,RR q=2,139,141,P1
+mixed,RR q=2,141,143,P4
+mixed,RR q=2,143,144,P3
+mixed,RR q=2,144,146,P1
+mixed,RR q=2,146,157,P4
+mixed,SRTF,0,3,P1
+mixed,SRTF,3,5,P2
+mixed,SRTF,5,8,P3
+mixed,SRTF,8,9,P5
+mixed,SRTF,9,12,P3
+mixed,SRTF,12,13,P6
+mixed,SRTF,13,14,P3
+mixed,SRTF,14,18,P7
+mixed,SRTF,18,20,P8
+mixed,SRTF,20,22,P9
+mixed,SRTF,22,26,P10
+mixed,SRTF,26,28,P11
+mixed,SRTF,28,31,P12
+mixed,SRTF,31,32,P13
+mixed,SRTF,32,33,P14
+mixed,SRTF,33,37,P3
+mixed,SRTF,37,40,P15
+mixed,SRTF,40,41,P3
+mixed,SRTF,41,45,P16
+mixed,SRTF,45,48,P17
+mixed,SRTF,48,52,P18
+mixed,SRTF,52,75,P3
+mixed,SRTF,75,112,P1
+mixed,SRTF,112,157,P4
+mixed,PRIORITY,0,3,P1
+mixed,PRIORITY,3,5,P2
+mixed,PRIORITY,5,8,P1
+mixed,PRIORITY,8,9,P5
+mixed,PRIORITY,9,12,P1
+mixed,PRIORITY,12,13,P6
+mixed,PRIORITY,13,14,P1
+mixed,PRIORITY,14,18,P7
+mixed,PRIORITY,18,20,P8
+mixed,PRIORITY,20,22,P9
+mixed,PRIORITY,22,25,P10
+mixed,PRIORITY,25,27,P11
+mixed,PRIORITY,27,28,P10
+mixed,PRIORITY,28,31,P12
+mixed,PRIORITY,31,32,P13
+mixed,PRIORITY,32,33,P14
+mixed,PRIORITY,33,37,P1
+mixed,PRIORITY,37,40,P15
+mixed,PRIORITY,40,41,P1
+mixed,PRIORITY,41,45,P16
+mixed,PRIORITY,45,48,P17
+mixed,PRIORITY,48,52,P18
+mixed,PRIORITY,52,77,P1
+mixed,PRIORITY,77,122,P4
+mixed,PRIORITY,122,157,P3
+starve,FCFS,0,6,P1
+starve,FCFS,6,9,P2
+starve,FCFS,9,12,P3
+starve,FCFS,12,15,P4
+starve,FCFS,15,18,P5
+starve,FCFS,18,21,P6
+starve,FCFS,21,24,P7
+starve,FCFS,24,27,P8
+starve,FCFS,27,30,P9
+starve,FCFS,30,33,P10
+starve,FCFS,33,36,P11
+starve,FCFS,36,39,P12
+starve,FCFS,39,42,P13
+starve,FCFS,42,45,P14
+starve,FCFS,45,48,P15
+starve,FCFS,48,51,P16
+starve,FCFS,51,54,P17
+starve,FCFS,54,57,P18
+starve,FCFS,57,60,P19
+starve,FCFS,60,63,P20
+starve,SJF,0,3,P2
+starve,SJF,3,6,P3
+starve,SJF,6,9,P4
+starve,SJF,9,12,P5
+starve,SJF,12,15,P6
+starve,SJF,15,18,P7
+starve,SJF,18,21,P8
+starve,SJF,21,24,P9
+starve,SJF,24,27,P10
+starve,SJF,27,30,P11
+starve,SJF,30,33,P12
+starve,SJF,33,36,P13
+starve,SJF,36,39,P14
+starve,SJF,39,42,P15
+starve,SJF,42,45,P16
+starve,SJF,45,48,P17
+starve,SJF,48,51,P18
+starve,SJF,51,54,P19
+starve,SJF,54,57,P20
+starve,SJF,57,63,P1
+starve,RR q=2,0,2,P1
+starve,RR q=2,2,4,P2
+starve,RR q=2,4,6,P1
+starve,RR q=2,6,8,P3
+starve,RR q=2,8,9,P2
+starve,RR q=2,9,11,P4
+starve,RR q=2,11,13,P1
+starve,RR q=2,13,14,P3
+starve,RR q=2,14,16,P5
+starve,RR q=2,16,17,P4
+starve,RR q=2,17,19,P6
+starve,RR q=2,19,21,P7
+starve,RR q=2,21,22,P5
+starve,RR q=2,22,24,P8
+starve,RR q=2,24,25,P6
+starve,RR q=2,25,27,P9
+starve,RR q=2,27,28,P7
+starve,RR q=2,28,30,P10
+starve,RR q=2,30,31,P8
+starve,RR q=2,31,33,P11
+starve,RR q=2,33,34,P9
+starve,RR q=2,34,36,P12
+starve,RR q=2,36,37,P10
+starve,RR q=2,37,39,P13
+starve,RR q=2,39,40,P11
+starve,RR q=2,40,42,P14
+starve,RR q=2,42,43,P12
+starve,RR q=2,43,45,P15
+starve,RR q=2,45,46,P13
+starve,RR q=2,46,48,P16
+starve,RR q=2,48,49,P14
+starve,RR q=2,49,51,P17
+starve,RR q=2,51,52,P15
+starve,RR q=2,52,54,P18
+starve,RR q=2,54,55,P16
+starve,RR q=2,55,57,P19
+starve,RR q=2,57,58,P17
+starve,RR q=2,58,60,P20
+starve,RR q=2,60,61,P18
+starve,RR q=2,61,62,P19
+starve,RR q=2,62,63,P20
+starve,SRTF,0,3,P2
+starve,SRTF,3,6,P3
+starve,SRTF,6,9,P4
+starve,SRTF,9,12,P5
+starve,SRTF,12,15,P6
+starve,SRTF,15,18,P7
+starve,SRTF,18,21,P8
+starve,SRTF,21,24,P9
+starve,SRTF,24,27,P10
+starve,SRTF,27,30,P11
+starve,SRTF,30,33,P12
+starve,SRTF,33,36,P13
+starve,SRTF,36,39,P14
+starve,SRTF,39,42,P15
+starve,SRTF,42,45,P16
+starve,SRTF,45,48,P17
+starve,SRTF,48,51,P18
+starve,SRTF,51,54,P19
+starve,SRTF,54,57,P20
+starve,SRTF,57,63,P1
+starve,PRIORITY,0,3,P2
+starve,PRIORITY,3,6,P3
+starve,PRIORITY,6,9,P4
+starve,PRIORITY,9,12,P5
+starve,PRIORITY,12,15,P6
+starve,PRIORITY,15,18,P7
+starve,PRIORITY,18,21,P8
+starve,PRIORITY,21,24,P9
+starve,PRIORITY,24,27,P10
+starve,PRIORITY,27,30,P11
+starve,PRIORITY,30,33,P12
+starve,PRIORITY,33,36,P13
+starve,PRIORITY,36,39,P14
+starve,PRIORITY,39,42,P15
+starve,PRIORITY,42,45,P16
+starve,PRIORITY,45,48,P17
+starve,PRIORITY,48,51,P18
+starve,PRIORITY,51,54,P19
+starve,PRIORITY,54,57,P20
+starve,PRIORITY,57,63,P1
+mixed,RR q=1,0,3,P1
+mixed,RR q=1,3,4,P2
+mixed,RR q=1,4,5,P3
+mixed,RR q=1,5,6,P1
+mixed,RR q=1,6,7,P2
+mixed,RR q=1,7,8,P3
+mixed,RR q=1,8,9,P1
+mixed,RR q=1,9,10,P4
+mixed,RR q=1,10,11,P5
+mixed,RR q=1,11,12,P3
+mixed,RR q=1,12,13,P1
+mixed,RR q=1,13,14,P4
+mixed,RR q=1,14,15,P6
+mixed,RR q=1,15,16,P3
+mixed,RR q=1,16,17,P1
+mixed,RR q=1,17,18,P7
+mixed,RR q=1,18,19,P4
+mixed,RR q=1,19,20,P3
+mixed,RR q=1,20,21,P1
+mixed,RR q=1,21,22,P8
+mixed,RR q=1,22,23,P7
+mixed,RR q=1,23,24,P4
+mixed,RR q=1,24,25,P9
+mixed,RR q=1,25,26,P3
+mixed,RR q=1,26,27,P1
+mixed,RR q=1,27,28,P10
+mixed,RR q=1,28,29,P8
+mixed,RR q=1,29,30,P7
+mixed,RR q=1,30,31,P4
+mixed,RR q=1,31,32,P11
+mixed,RR q=1,32,33,P9
+mixed,RR q=1,33,34,P12
+mixed,RR q=1,34,35,P3
+mixed,RR q=1,35,36,P1
+mixed,RR q=1,36,37,P10
+mixed,RR q=1,37,38,P7
+mixed,RR q=1,38,39,P13
+mixed,RR q=1,39,40,P4
+mixed,RR q=1,40,41,P14
+mixed,RR q=1,41,42,P11
+mixed,RR q=1,42,43,P12
+mixed,RR q=1,43,44,P3
+mixed,RR q=1,44,45,P1
+mixed,RR q=1,45,46,P15
+mixed,RR q=1,46,47,P10
+mixed,RR q=1,47,48,P4
+mixed,RR q=1,48,49,P16
+mixed,RR q=1,49,50,P17
+mixed,RR q=1,50,51,P12
+mixed,RR q=1,51,52,P3
+mixed,RR q=1,52,53,P1
+mixed,RR q=1,53,54,P15
+mixed,RR q=1,54,55,P18
+mixed,RR q=1,55,56,P10
+mixed,RR q=1,56,57,P4
+mixed,RR q=1,57,58,P16
+mixed,RR q=1,58,59,P17
+mixed,RR q=1,59,60,P3
+mixed,RR q=1,60,61,P1
+mixed,RR q=1,61,62,P15
+mixed,RR q=1,62,63,P18
+mixed,RR q=1,63,64,P4
+mixed,RR q=1,64,65,P16
+mixed,RR q=1,65,66,P17
+mixed,RR q=1,66,67,P3
+mixed,RR q=1,67,68,P1
+mixed,RR q=1,68,69,P18
+mixed,RR q=1,69,70,P4
+mixed,RR q=1,70,71,P16
+mixed,RR q=1,71,72,P3
+mixed,RR q=1,72,73,P1
+mixed,RR q=1,73,74,P18
+mixed,RR q=1,74,75,P4
+mixed,RR q=1,75,76,P3
+mixed,RR q=1,76,77,P1
+mixed,RR q=1,77,78,P4
+mixed,RR q=1,78,79,P3
+mixed,RR q=1,79,80,P1
+mixed,RR q=1,80,81,P4
+mixed,RR q=1,81,82,P3
+mixed,RR q=1,82,83,P1
+mixed,RR q=1,83,84,P4
+mixed,RR q=1,84,85,P3
+mixed,RR q=1,85,86,P1
+mixed,RR q=1,86,87,P4
+mixed,RR q=1,87,88,P3
+mixed,RR q=1,88,89,P1
+mixed,RR q=1,89,90,P4
+mixed,RR q=1,90,91,P3
+mixed,RR q=1,91,92,P1
+mixed,RR q=1,92,93,P4
+mixed,RR q=1,93,94,P3
+mixed,RR q=1,94,95,P1
+mixed,RR q=1,95,96,P4
+mixed,RR q=1,96,97,P3
+mixed,RR q=1,97,98,P1
+mixed,RR q=1,98,99,P4
+mixed,RR q=1,99,100,P3
+mixed,RR q=1,100,101,P1
+mixed,RR q=1,101,102,P4
+mixed,RR q=1,102,103,P3
+mixed,RR q=1,103,104,P1
+mixed,RR q=1,104,105,P4
+mixed,RR q=1,105,106,P3
+mixed,RR q=1,106,107,P1
+mixed,RR q=1,107,108,P4
+mixed,RR q=1,108,109,P3
+mixed,RR q=1,109,110,P1
+mixed,RR q=1,110,111,P4
+mixed,RR q=1,111,112,P3
+mixed,RR q=1,112,113,P1
+mixed,RR q=1,113,114,P4
+mixed,RR q=1,114,115,P3
+mixed,RR q=1,115,116,P1
+mixed,RR q=1,116,117,P4
+mixed,RR q=1,117,118,P3
+mixed,RR q=1,118,119,P1
+mixed,RR q=1,119,120,P4
+mixed,RR q=1,120,121,P3
+mixed,RR q=1,121,122,P1
+mixed,RR q=1,122,123,P4
+mixed,RR q=1,123,124,P3
+mixed,RR q=1,124,125,P1
+mixed,RR q=1,125,126,P4
+mixed,RR q=1,126,127,P3
+mixed,RR q=1,127,128,P1
+mixed,RR q=1,128,129,P4
+mixed,RR q=1,129,130,P3
+mixed,RR q=1,130,131,P1
+mixed,RR q=1,131,132,P4
+mixed,RR q=1,132,133,P3
+mixed,RR q=1,133,134,P1
+mixed,RR q=1,134,135,P4
+mixed,RR q=1,135,136,P3
+mixed,RR q=1,136,137,P1
+mixed,RR q=1,137,138,P4
+mixed,RR q=1,138,139,P3
+mixed,RR q=1,139,140,P1
+mixed,RR q=1,140,141,P4
+mixed,RR q=1,141,142,P3
+mixed,RR q=1,142,143,P1
+mixed,RR q=1,143,144,P4
+mixed,RR q=1,144,145,P1
+mixed,RR q=1,145,146,P4
+mixed,RR q=1,146,147,P1
+mixed,RR q=1,147,157,P4
+mixed,RR q=3,0,3,P1
+mixed,RR q=3,3,5,P2
+mixed,RR q=3,5,8,P3
+mixed,RR q=3,8,11,P1
+mixed,RR q=3,11,14,P4
+mixed,RR q=3,14,15,P5
+mixed,RR q=3,15,18,P3
+mixed,RR q=3,18,21,P1
+mixed,RR q=3,21,22,P6
+mixed,RR q=3,22,25,P7
+mixed,RR q=3,25,28,P4
+mixed,RR q=3,28,30,P8
+mixed,RR q=3,30,33,P3
+mixed,RR q=3,33,35,P9
+mixed,RR q=3,35,38,P1
+mixed,RR q=3,38,41,P10
+mixed,RR q=3,41,43,P11
+mixed,RR q=3,43,44,P7
+mixed,RR q=3,44,47,P12
+mixed,RR q=3,47,50,P4
+mixed,RR q=3,50,51,P13
+mixed,RR q=3,51,52,P14
+mixed,RR q=3,52,55,P3
+mixed,RR q=3,55,58,P15
+mixed,RR q=3,58,61,P1
+mixed,RR q=3,61,64,P16
+mixed,RR q=3,64,65,P10
+mixed,RR q=3,65,68,P17
+mixed,RR q=3,68,71,P18
+mixed,RR q=3,71,74,P4
+mixed,RR q=3,74,77,P3
+mixed,RR q=3,77,80,P1
+mixed,RR q=3,80,81,P16
+mixed,RR q=3,81,82,P18
+mixed,RR q=3,82,85,P4
+mixed,RR q=3,85,88,P3
+mixed,RR q=3,88,91,P1
+mixed,RR q=3,91,94,P4
+mixed,RR q=3,94,97,P3
+mixed,RR q=3,97,100,P1
+mixed,RR q=3,100,103,P4
+mixed,RR q=3,103,106,P3
+mixed,RR q=3,106,109,P1
+mixed,RR q=3,109,112,P4
+mixed,RR q=3,112,115,P3
+mixed,RR q=3,115,118,P1
+mixed,RR q=3,118,121,P4
+mixed,RR q=3,121,124,P3
+mixed,RR q=3,124,127,P1
+mixed,RR q=3,127,130,P4
+mixed,RR q=3,130,133,P3
+mixed,RR q=3,133,136,P1
+mixed,RR q=3,136,139,P4
+mixed,RR q=3,139,141,P3
+mixed,RR q=3,141,144,P1
+mixed,RR q=3,144,147,P4
+mixed,RR q=3,147,148,P1
+mixed,RR q=3,148,157,P4
+mixed,RR q=4,0,4,P1
+mixed,RR q=4,4,6,P2
+mixed,RR q=4,6,10,P3
+mixed,RR q=4,10,14,P1
+mixed,RR q=4,14,18,P4
+mixed,RR q=4,18,19,P5
+mixed,RR q=4,19,23,P3
+mixed,RR q=4,23,24,P6
+mixed,RR q=4,24,28,P7
+mixed,RR q=4,28,32,P1
+mixed,RR q=4,32,34,P8
+mixed,RR q=4,34,38,P4
+mixed,RR q=4,38,40,P9
+mixed,RR q=4,40,44,P10
+mixed,RR q=4,44,48,P3
+mixed,RR q=4,48,50,P11
+mixed,RR q=4,50,53,P12
+mixed,RR q=4,53,54,P13
+mixed,RR q=4,54,55,P14
+mixed,RR q=4,55,59,P1
+mixed,RR q=4,59,62,P15
+mixed,RR q=4,62,66,P4
+mixed,RR q=4,66,70,P16
+mixed,RR q=4,70,73,P17
+mixed,RR q=4,73,77,P18
+mixed,RR q=4,77,81,P3
+mixed,RR q=4,81,85,P1
+mixed,RR q=4,85,89,P4
+mixed,RR q=4,89,93,P3
+mixed,RR q=4,93,97,P1
+mixed,RR q=4,97,101,P4
+mixed,RR q=4,101,105,P3
+mixed,RR q=4,105,109,P1
+mixed,RR q=4,109,113,P4
+mixed,RR q=4,113,117,P3
+mixed,RR q=4,117,121,P1
+mixed,RR q=4,121,125,P4
+mixed,RR q=4,125,129,P3
+mixed,RR q=4,129,133,P1
+mixed,RR q=4,133,137,P4
+mixed,RR q=4,137,140,P3
+mixed,RR q=4,140,144,P1
+mixed,RR q=4,144,157,P4
+mixed,RR q=5,0,5,P1
+mixed,RR q=5,5,7,P2
+mixed,RR q=5,7,12,P3
+mixed,RR q=5,12,17,P1
+mixed,RR q=5,17,22,P4
+mixed,RR q=5,22,23,P5
+mixed,RR q=5,23,24,P6
+mixed,RR q=5,24,29,P3
+mixed,RR q=5,29,33,P7
+mixed,RR q=5,33,38,P1
+mixed,RR q=5,38,40,P8
+mixed,RR q=5,40,42,P9
+mixed,RR q=5,42,46,P10
+mixed,RR q=5,46,51,P4
+mixed,RR q=5,51,53,P11
+mixed,RR q=5,53,56,P12
+mixed,RR q=5,56,61,P3
+mixed,RR q=5,61,62,P13
+mixed,RR q=5,62,63,P14
+mixed,RR q=5,63,66,P15
+mixed,RR q=5,66,71,P1
+mixed,RR q=5,71,75,P16
+mixed,RR q=5,75,78,P17
+mixed,RR q=5,78,82,P18
+mixed,RR q=5,82,87,P4
+mixed,RR q=5,87,92,P3
+mixed,RR q=5,92,97,P1
+mixed,RR q=5,97,102,P4
+mixed,RR q=5,102,107,P3
+mixed,RR q=5,107,112,P1
+mixed,RR q=5,112,117,P4
+mixed,RR q=5,117,122,P3
+mixed,RR q=5,122,127,P1
+mixed,RR q=5,127,132,P4
+mixed,RR q=5,132,137,P3
+mixed,RR q=5,137,142,P1
+mixed,RR q=5,142,157,P4
+mixed,RR q=6,0,6,P1
+mixed,RR q=6,6,8,P2
+mixed,RR q=6,8,14,P3
+mixed,RR q=6,14,20,P1
+mixed,RR q=6,20,26,P4
+mixed,RR q=6,26,27,P5
+mixed,RR q=6,27,28,P6
+mixed,RR q=6,28,32,P7
+mixed,RR q=6,32,38,P3
+mixed,RR q=6,38,40,P8
+mixed,RR q=6,40,42,P9
+mixed,RR q=6,42,48,P1
+mixed,RR q=6,48,52,P10
+mixed,RR q=6,52,54,P11
+mixed,RR q=6,54,57,P12
+mixed,RR q=6,57,63,P4
+mixed,RR q=6,63,64,P13
+mixed,RR q=6,64,65,P14
+mixed,RR q=6,65,68,P15
+mixed,RR q=6,68,74,P3
+mixed,RR q=6,74,78,P16
+mixed,RR q=6,78,81,P17
+mixed,RR q=6,81,85,P18
+mixed,RR q=6,85,91,P1
+mixed,RR q=6,91,97,P4
+mixed,RR q=6,97,103,P3
+mixed,RR q=6,103,109,P1
+mixed,RR q=6,109,115,P4
+mixed,RR q=6,115,121,P3
+mixed,RR q=6,121,127,P1
+mixed,RR q=6,127,133,P4
+mixed,RR q=6,133,138,P3
+mixed,RR q=6,138,142,P1
+mixed,RR q=6,142,157,P4
+mixed,RR q=7,0,7,P1
+mixed,RR q=7,7,9,P2
+mixed,RR q=7,9,16,P3
+mixed,RR q=7,16,23,P4
+mixed,RR q=7,23,30,P1
+mixed,RR q=7,30,31,P5
+mixed,RR q=7,31,32,P6
+mixed,RR q=7,32,36,P7
+mixed,RR q=7,36,43,P3
+mixed,RR q=7,43,45,P8
+mixed,RR q=7,45,47,P9
+mixed,RR q=7,47,51,P10
+mixed,RR q=7,51,58,P4
+mixed,RR q=7,58,60,P11
+mixed,RR q=7,60,63,P12
+mixed,RR q=7,63,70,P1
+mixed,RR q=7,70,71,P13
+mixed,RR q=7,71,72,P14
+mixed,RR q=7,72,75,P15
+mixed,RR q=7,75,79,P16
+mixed,RR q=7,79,82,P17
+mixed,RR q=7,82,89,P3
+mixed,RR q=7,89,93,P18
+mixed,RR q=7,93,100,P4
+mixed,RR q=7,100,107,P1
+mixed,RR q=7,107,114,P3
+mixed,RR q=7,114,121,P4
+mixed,RR q=7,121,128,P1
+mixed,RR q=7,128,135,P3
+mixed,RR q=7,135,142,P4
+mixed,RR q=7,142,147,P1
+mixed,RR q=7,147,157,P4
+mixed,RR q=8,0,8,P1
+mixed,RR q=8,8,10,P2
+mixed,RR q=8,10,18,P3
+mixed,RR q=8,18,26,P4
+mixed,RR q=8,26,27,P5
+mixed,RR q=8,27,35,P1
+mixed,RR q=8,35,36,P6
+mixed,RR q=8,36,40,P7
+mixed,RR q=8,40,42,P8
+mixed,RR q=8,42,50,P3
+mixed,RR q=8,50,52,P9
+mixed,RR q=8,52,56,P10
+mixed,RR q=8,56,58,P11
+mixed,RR q=8,58,61,P12
+mixed,RR q=8,61,69,P4
+mixed,RR q=8,69,70,P13
+mixed,RR q=8,70,71,P14
+mixed,RR q=8,71,79,P1
+mixed,RR q=8,79,82,P15
+mixed,RR q=8,82,86,P16
+mixed,RR q=8,86,89,P17
+mixed,RR q=8,89,93,P18
+mixed,RR q=8,93,101,P3
+mixed,RR q=8,101,109,P4
+mixed,RR q=8,109,117,P1
+mixed,RR q=8,117,125,P3
+mixed,RR q=8,125,133,P4
+mixed,RR q=8,133,141,P1
+mixed,RR q=8,141,144,P3
+mixed,RR q=8,144,157,P4
+mixed,RR q=9,0,9,P1
+mixed,RR q=9,9,11,P2
+mixed,RR q=9,11,20,P3
+mixed,RR q=9,20,29,P4
+mixed,RR q=9,29,30,P5
+mixed,RR q=9,30,39,P1
+mixed,RR q=9,39,40,P6
+mixed,RR q=9,40,44,P7
+mixed,RR q=9,44,46,P8
+mixed,RR q=9,46,48,P9
+mixed,RR q=9,48,57,P3
+mixed,RR q=9,57,61,P10
+mixed,RR q=9,61,63,P11
+mixed,RR q=9,63,66,P12
+mixed,RR q=9,66,75,P4
+mixed,RR q=9,75,76,P13
+mixed,RR q=9,76,77,P14
+mixed,RR q=9,77,80,P15
+mixed,RR q=9,80,89,P1
+mixed,RR q=9,89,93,P16
+mixed,RR q=9,93,96,P17
+mixed,RR q=9,96,100,P18
+mixed,RR q=9,100,109,P3
+mixed,RR q=9,109,118,P4
+mixed,RR q=9,118,127,P1
+mixed,RR q=9,127,135,P3
+mixed,RR q=9,135,144,P4
+mixed,RR q=9,144,148,P1
+mixed,RR q=9,148,157,P4
+mixed,RR q=10,0,10,P1
+mixed,RR q=10,10,12,P2
+mixed,RR q=10,12,22,P3
+mixed,RR q=10,22,32,P4
+mixed,RR q=10,32,33,P5
+mixed,RR q=10,33,43,P1
+mixed,RR q=10,43,44,P6
+mixed,RR q=10,44,48,P7
+mixed,RR q=10,48,50,P8
+mixed,RR q=10,50,52,P9
+mixed,RR q=10,52,56,P10
+mixed,RR q=10,56,66,P3
+mixed,RR q=10,66,68,P11
+mixed,RR q=10,68,71,P12
+mixed,RR q=10,71,72,P13
+mixed,RR q=10,72,73,P14
+mixed,RR q=10,73,83,P4
+mixed,RR q=10,83,86,P15
+mixed,RR q=10,86,90,P16
+mixed,RR q=10,90,93,P17
+mixed,RR q=10,93,103,P1
+mixed,RR q=10,103,107,P18
+mixed,RR q=10,107,117,P3
+mixed,RR q=10,117,127,P4
+mixed,RR q=10,127,137,P1
+mixed,RR q=10,137,142,P3
+mixed,RR q=10,142,157,P4
+starve,PRIORITY aging=3,0,3,P2
+starve,PRIORITY aging=3,3,6,P3
+starve,PRIORITY aging=3,6,9,P4
+starve,PRIORITY aging=3,9,12,P5
+starve,PRIORITY aging=3,12,15,P6
+starve,PRIORITY aging=3,15,18,P7
+starve,PRIORITY aging=3,18,21,P8
+starve,PRIORITY aging=3,21,27,P1
+starve,PRIORITY aging=3,27,30,P9
+starve,PRIORITY aging=3,30,33,P10
+starve,PRIORITY aging=3,33,36,P12
+starve,PRIORITY aging=3,36,39,P11
+starve,PRIORITY aging=3,39,42,P13
+starve,PRIORITY aging=3,42,45,P14
+starve,PRIORITY aging=3,45,48,P15
+starve,PRIORITY aging=3,48,51,P16
+starve,PRIORITY aging=3,51,54,P18
+starve,PRIORITY aging=3,54,57,P17
+starve,PRIORITY aging=3,57,60,P19
+starve,PRIORITY aging=3,60,63,P20
+mixed,"MLFQ q=2,4,8 boost=20",0,3,P1
+mixed,"MLFQ q=2,4,8 boost=20",3,5,P2
+mixed,"MLFQ q=2,4,8 boost=20",5,7,P3
+mixed,"MLFQ q=2,4,8 boost=20",7,9,P4
+mixed,"MLFQ q=2,4,8 boost=20",9,10,P5
+mixed,"MLFQ q=2,4,8 boost=20",10,12,P1
+mixed,"MLFQ q=2,4,8 boost=20",12,13,P6
+mixed,"MLFQ q=2,4,8 boost=20",13,14,P1
+mixed,"MLFQ q=2,4,8 boost=20",14,16,P7
+mixed,"MLFQ q=2,4,8 boost=20",16,18,P3
+mixed,"MLFQ q=2,4,8 boost=20",18,20,P8
+mixed,"MLFQ q=2,4,8 boost=20",20,22,P9
+mixed,"MLFQ q=2,4,8 boost=20",22,24,P3
+mixed,"MLFQ q=2,4,8 boost=20",24,26,P4
+mixed,"MLFQ q=2,4,8 boost=20",26,28,P7
+mixed,"MLFQ q=2,4,8 boost=20",28,30,P1
+mixed,"MLFQ q=2,4,8 boost=20",30,32,P10
+mixed,"MLFQ q=2,4,8 boost=20",32,34,P11
+mixed,"MLFQ q=2,4,8 boost=20",34,36,P12
+mixed,"MLFQ q=2,4,8 boost=20",36,37,P13
+mixed,"MLFQ q=2,4,8 boost=20",37,38,P14
+mixed,"MLFQ q=2,4,8 boost=20",38,40,P15
+mixed,"MLFQ q=2,4,8 boost=20",40,42,P3
+mixed,"MLFQ q=2,4,8 boost=20",42,44,P4
+mixed,"MLFQ q=2,4,8 boost=20",44,46,P1
+mixed,"MLFQ q=2,4,8 boost=20",46,48,P10
+mixed,"MLFQ q=2,4,8 boost=20",48,49,P12
+mixed,"MLFQ q=2,4,8 boost=20",49,50,P15
+mixed,"MLFQ q=2,4,8 boost=20",50,52,P16
+mixed,"MLFQ q=2,4,8 boost=20",52,54,P17
+mixed,"MLFQ q=2,4,8 boost=20",54,56,P18
+mixed,"MLFQ q=2,4,8 boost=20",56,60,P3
+mixed,"MLFQ q=2,4,8 boost=20",60,62,P4
+mixed,"MLFQ q=2,4,8 boost=20",62,64,P1
+mixed,"MLFQ q=2,4,8 boost=20",64,66,P16
+mixed,"MLFQ q=2,4,8 boost=20",66,67,P17
+mixed,"MLFQ q=2,4,8 boost=20",67,69,P18
+mixed,"MLFQ q=2,4,8 boost=20",69,71,P3
+mixed,"MLFQ q=2,4,8 boost=20",71,75,P4
+mixed,"MLFQ q=2,4,8 boost=20",75,79,P1
+mixed,"MLFQ q=2,4,8 boost=20",79,82,P3
+mixed,"MLFQ q=2,4,8 boost=20",82,84,P4
+mixed,"MLFQ q=2,4,8 boost=20",84,86,P1
+mixed,"MLFQ q=2,4,8 boost=20",86,90,P3
+mixed,"MLFQ q=2,4,8 boost=20",90,94,P4
+mixed,"MLFQ q=2,4,8 boost=20",94,98,P1
+mixed,"MLFQ q=2,4,8 boost=20",98,102,P3
+mixed,"MLFQ q=2,4,8 boost=20",102,104,P4
+mixed,"MLFQ q=2,4,8 boost=20",104,106,P1
+mixed,"MLFQ q=2,4,8 boost=20",106,110,P3
+mixed,"MLFQ q=2,4,8 boost=20",110,114,P4
+mixed,"MLFQ q=2,4,8 boost=20",114,118,P1
+mixed,"MLFQ q=2,4,8 boost=20",118,122,P3
+mixed,"MLFQ q=2,4,8 boost=20",122,124,P4
+mixed,"MLFQ q=2,4,8 boost=20",124,126,P1
+mixed,"MLFQ q=2,4,8 boost=20",126,128,P3
+mixed,"MLFQ q=2,4,8 boost=20",128,132,P4
+mixed,"MLFQ q=2,4,8 boost=20",132,136,P1
+mixed,"MLFQ q=2,4,8 boost=20",136,142,P4
+mixed,"MLFQ q=2,4,8 boost=20",142,144,P1
+mixed,"MLFQ q=2,4,8 boost=20",144,148,P4
+mixed,"MLFQ q=2,4,8 boost=20",148,152,P1
+mixed,"MLFQ q=2,4,8 boost=20",152,157,P4

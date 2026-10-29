@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import os
-import re
 from pathlib import Path
 
 from reporting import generate, save_run
@@ -14,21 +12,10 @@ from scheduler import read_processes, simulate
 ROOT = Path(__file__).resolve().parent
 
 
-def write_readme(input_dir, output):
-    guide = (ROOT / "GUIDE.md").read_text(encoding="utf-8")
-    body = (output / "report.md").read_text(encoding="utf-8")
-    prefix = Path(os.path.relpath(output, input_dir)).as_posix()
-    body = re.sub(r"\]\(([^)]+\.svg)\)", lambda m: f"]({prefix}/{m.group(1)})", body)
-    image = input_dir / "assets" / "fcfs_jobs_handwritten.jpg"
-    photo = ("\n## Фото ручной диаграммы FCFS\n\n![Диаграмма на бумаге](assets/fcfs_jobs_handwritten.jpg)\n"
-             if image.is_file() else "")
-    (input_dir / "README.md").write_text(guide + "\n\n---\n\n" + body + photo, encoding="utf-8")
-
-
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Проект 1: планирование процессов, блоки А, Б, В")
     commands = parser.add_subparsers(dest="command")
-    report = commands.add_parser("report", help="Пересоздать таблицы, диаграммы, HTML и README")
+    report = commands.add_parser("report", help="Пересоздать таблицы, диаграммы и HTML-отчёт")
     report.add_argument("--input-dir", type=Path, default=ROOT)
     report.add_argument("--output-dir", type=Path)
     report.add_argument("--aging-interval", type=int, default=3)
@@ -65,9 +52,7 @@ def main(argv=None):
             settings = ({"aging_interval": args.aging_interval, "quanta": tuple(args.mlfq_quanta),
                          "boost_interval": args.boost_interval} if args.command else {})
             generate(input_dir, output, **settings)
-            write_readme(input_dir, output)
             print(f"Report: {output / 'report.html'}")
-            print(f"README: {input_dir / 'README.md'}")
             print("A/B/C calculations complete. PR-5 repository: 5 published results and 64 schedules PASS.")
             print("Paper photo pending. The original teacher answer key is separate from the repository cross-check.")
     except (ValueError, OSError, AssertionError) as exc:

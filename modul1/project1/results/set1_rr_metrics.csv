@@ -1,5 +1,0 @@
-﻿pid,arrival,burst,priority,start,completion,waiting,turnaround,response
-P1,0,8,2,0,22,14,22,0
-P2,1,4,3,2,12,7,11,1
-P3,2,9,1,4,26,15,24,2
-P4,3,5,4,8,23,15,20,5

@@ -1,4 +1,14 @@
-Command: /usr/bin/python3 -u -m unittest discover -s project1 -p test_scheduler.py -v
+System: Linux-6.6.114.1-microsoft-standard-WSL2-x86_64-with-glibc2.43
+Python: 3.14.4
+Checked at: 2026-10-29T13:12:53.676386+06:00 (Asia/Bishkek)
+
+$ /usr/bin/python3 -u project1/run.py
+Report: /mnt/c/Users/lulu/Documents/Projects/os_module_submission/modul1/project1/results/report.html
+A/B/C calculations complete. PR-5 repository: 5 published results and 64 schedules PASS.
+Paper photo pending. The original teacher answer key is separate from the repository cross-check.
+Exit code: 0
+
+$ /usr/bin/python3 -u -m unittest discover -s project1 -p test_scheduler.py -v
 test_aging_advances_p1_in_supplied_workload (test_scheduler.SchedulingTests.test_aging_advances_p1_in_supplied_workload) ... ok
 test_equal_key_keeps_current_even_if_other_arrived_earlier (test_scheduler.SchedulingTests.test_equal_key_keeps_current_even_if_other_arrived_earlier) ... ok
 test_fcfs_hand_calculation (test_scheduler.SchedulingTests.test_fcfs_hand_calculation) ... ok
@@ -14,8 +24,9 @@ test_sjf_hand_calculation (test_scheduler.SchedulingTests.test_sjf_hand_calculat
 test_srtf_hand_calculation (test_scheduler.SchedulingTests.test_srtf_hand_calculation) ... ok
 
 ----------------------------------------------------------------------
-Ran 13 tests in 0.071s
+Ran 13 tests in 0.091s
 
 OK
-
 Exit code: 0
+
+PASS: report, 13 tests, PR-5 published results 5/5 and schedules 64/64.
